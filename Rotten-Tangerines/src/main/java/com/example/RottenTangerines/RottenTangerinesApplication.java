@@ -1,4 +1,4 @@
-package com.example.Rotten.Tangerines;
+package com.example.RottenTangerines;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
