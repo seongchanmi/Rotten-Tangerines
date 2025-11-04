@@ -1,4 +1,4 @@
-package com.example.Rotten.Tangerines;
+package com.example.RottenTangerines;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
