@@ -1,70 +1,89 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>영화 수정 페이지</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍊 영화 리뷰 수정</title>
+
     <style>
+        /* 🍊 폰트 & 기본설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
         * {
           box-sizing: border-box;
+          font-family: 'Gowun Dodum', sans-serif;
           margin: 0;
           padding: 0;
-          font-family: "Noto Sans KR", sans-serif;
         }
 
         body {
-          padding: 10px;
+          background: linear-gradient(180deg, #fff8ee 0%, #ffeccc 100%);
+          color: #3a2d00;
+          min-height: 100vh;
+          padding: 20px;
         }
 
-        /* 상단 네비게이션 */
+        /* 🍊 상단 네비 */
         .navbar {
           display: flex;
-          border: 2px solid black;
+          justify-content: center;
+          gap: 30px;
+          background-color: #ffb84c;
+          padding: 15px 0;
+          border-radius: 20px;
+          box-shadow: 0 4px 8px rgba(230, 120, 0, 0.3);
         }
 
         .nav-item {
-          flex: 0 0 100px;
-          text-align: center;
-          padding: 20px 0;
-          font-size: 1.5rem;
-          border-right: 2px solid #004b63;
+          color: white;
+          font-size: 1.2rem;
+          letter-spacing: 1px;
           cursor: pointer;
+          transition: 0.3s;
         }
 
-        .nav-item:last-child {
-          border-right: none;
+        .nav-item:hover {
+          transform: scale(1.1);
+          text-shadow: 0 0 6px #fff5cc;
         }
 
-        /* 전체 레이아웃 */
+        /* 🍊 메인 박스 */
         .container {
           display: flex;
-          gap: 20px;
-          border: 2px solid #d36b00;
-          margin-top: 20px;
-          padding: 20px;
-          justify-content: space-between;
+          background: #fffdf7;
+          border-radius: 20px;
+          box-shadow: 0 4px 12px rgba(230, 160, 0, 0.2);
+          padding: 30px;
+          margin: 30px auto;
+          max-width: 900px;
+          gap: 30px;
         }
 
-        /* 왼쪽 */
+        /* 🍊 왼쪽 영역 */
         .left {
+          flex: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 10px;
-          flex: 1;
+          gap: 15px;
         }
 
         .photo-box {
-          border: 2px solid #d36b00;
-          width: 200px;
-          height: 250px;
+          width: 220px;
+          height: 260px;
+          border-radius: 15px;
+          background: #fff7e6;
+          border: 3px dashed #ff9c33;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          font-size: 1rem;
           overflow: hidden;
-          position: relative;
+          transition: 0.3s;
+        }
+
+        .photo-box:hover {
+          border-color: #ffb84c;
+          background: #fff3da;
         }
 
         .photo-box img {
@@ -73,107 +92,120 @@
           object-fit: cover;
         }
 
-        .date {
-          border: 2px solid #d36b00;
-          width: 200px;
-          text-align: center;
-          padding: 10px 0;
-          font-size: 1.1rem;
+        input[type="file"] {
+          font-size: 0.9rem;
+          margin-top: 10px;
+          cursor: pointer;
         }
 
-        /* 오른쪽 */
+        .date {
+          border: none;
+          background: #fff3da;
+          padding: 10px 20px;
+          border-radius: 10px;
+          border: 2px solid #ffd18b;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+
+        /* 🍊 오른쪽 영역 */
         .right {
           flex: 2;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 15px;
         }
 
         .info-row {
           display: flex;
           gap: 10px;
+          align-items: center;
         }
 
         .movie-title {
           flex: 2;
-          border: 2px solid #d36b00;
-          padding: 8px;
+          border: 2px solid #ffd18b;
+          border-radius: 10px;
+          padding: 10px;
+          background: #fff8ee;
           font-size: 1.1rem;
         }
 
         .rating {
           flex: 1;
-          border: 2px solid #d36b00;
           display: flex;
-          align-items: center;
           justify-content: center;
           gap: 5px;
-          font-size: 1.3rem;
+          background: #fff3da;
+          border-radius: 10px;
+          padding: 10px;
+          border: 2px solid #ffd18b;
           cursor: pointer;
         }
 
+        .orange {
+          font-size: 1.8rem;
+          transition: transform 0.2s;
+        }
+
+        .orange:hover {
+          transform: scale(1.3);
+        }
+
+        .selected {
+          opacity: 1;
+        }
+
+        .unselected {
+          opacity: 0.3;
+        }
+
         .review {
-          border: 2px solid #d36b00;
+          border: 2px solid #ffd18b;
+          border-radius: 10px;
           height: 200px;
-          padding: 10px;
+          padding: 15px;
           font-size: 1rem;
+          background: #fff8ee;
           resize: none;
         }
 
         .btn-group {
           display: flex;
           justify-content: flex-end;
-          gap: 5px;
+          gap: 10px;
         }
 
         .btn {
-          border: 2px solid #d36b00;
-          background-color: white;
-          padding: 8px 20px;
-          font-size: 1.1rem;
+          background-color: #ffb84c;
+          border: none;
+          border-radius: 12px;
+          padding: 10px 25px;
+          font-size: 1rem;
+          color: white;
           cursor: pointer;
+          transition: 0.3s;
         }
 
         .btn:hover {
-          background-color: #ffe9d0;
-        }
-
-        input[type="file"] {
-          font-size: 0.9rem;
-        }
-
-        .orange {
-          font-size: 1.6rem;
-          cursor: pointer;
-          transition: transform 0.1s;
-        }
-
-        .orange:hover {
-          transform: scale(1.2);
-        }
-
-        .selected {
-          filter: grayscale(0%);
-        }
-
-        .unselected {
-          filter: grayscale(100%);
+          background-color: #ff9c33;
+          box-shadow: 0 0 8px rgba(255, 163, 72, 0.6);
         }
     </style>
 </head>
 
 <body>
-<!-- 상단 메뉴 -->
+<!-- 🍊 상단 네비 -->
 <header class="navbar">
-    <div class="nav-item" onclick="goHome()">홈</div>
-    <div class="nav-item" onclick="goRegister()">등록</div>
+    <div class="nav-item" onclick="goHome()">🏠 홈</div>
+    <div class="nav-item" onclick="goRegister()">➕ 등록</div>
 </header>
 
-<!-- 메인 -->
+<!-- 🍊 메인 -->
 <main class="container">
     <div class="left">
         <div class="photo-box" id="photoBox">
-            <span>사진 미리보기</span>
+            <span>📸 사진을 올려주세요</span>
             <input type="file" id="photoInput" accept="image/*" />
         </div>
         <input type="date" class="date" id="dateInput" />
@@ -181,7 +213,7 @@
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="movieInput" placeholder="영화 이름" />
+            <input type="text" class="movie-title" id="movieInput" placeholder="영화 이름을 입력하세요" />
             <div class="rating" id="ratingBox">
                 <span class="orange unselected">🍊</span>
                 <span class="orange unselected">🍊</span>
@@ -190,7 +222,7 @@
                 <span class="orange unselected">🍊</span>
             </div>
         </div>
-        <textarea class="review" id="reviewInput" placeholder="리뷰를 수정하세요..."></textarea>
+        <textarea class="review" id="reviewInput" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
 
         <div class="btn-group">
             <button class="btn" id="editBtn">수정</button>
@@ -200,7 +232,7 @@
 </main>
 
 <script>
-    // 사진 미리보기
+    // 🍊 사진 미리보기
     const photoInput = document.getElementById("photoInput");
     const photoBox = document.getElementById("photoBox");
 
@@ -215,7 +247,7 @@
       }
     });
 
-    // 별점 클릭
+    // 🍊 별점
     const ratingBox = document.getElementById("ratingBox");
     const oranges = ratingBox.querySelectorAll(".orange");
     let selectedRating = 0;
@@ -224,35 +256,29 @@
       orange.addEventListener("click", () => {
         selectedRating = index + 1;
         oranges.forEach((o, i) => {
-          if (i < selectedRating) {
-            o.classList.add("selected");
-            o.classList.remove("unselected");
-          } else {
-            o.classList.add("unselected");
-            o.classList.remove("selected");
-          }
+          o.classList.toggle("selected", i < selectedRating);
+          o.classList.toggle("unselected", i >= selectedRating);
         });
       });
     });
 
-    // 수정 버튼
+    // 🍊 수정버튼
     document.getElementById("editBtn").addEventListener("click", () => {
       const movie = document.getElementById("movieInput").value;
       const review = document.getElementById("reviewInput").value;
       const date = document.getElementById("dateInput").value;
       console.log("수정된 정보:", { movie, review, date, selectedRating });
 
-      // 등록 페이지로 이동
+      alert("수정 완료! 🍊 등록 페이지로 이동합니다.");
       window.location.href = "register.html";
     });
 
-    // 삭제 버튼
+    // 🍊 삭제버튼
     document.getElementById("deleteBtn").addEventListener("click", () => {
-      alert("삭제되었습니다. 홈으로 이동합니다.");
+      alert("삭제되었습니다. 홈으로 이동합니다 🏠");
       window.location.href = "index.html";
     });
 
-    // 네비게이션 클릭
     function goHome() {
       window.location.href = "index.html";
     }
