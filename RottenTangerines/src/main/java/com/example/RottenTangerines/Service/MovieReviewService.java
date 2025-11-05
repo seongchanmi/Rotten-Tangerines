@@ -23,7 +23,7 @@ public class MovieReviewService {
     public MovieReview register(ReviewRequest reviewRequest) {
         MovieReview movieReview = MovieReview.builder()
                 .title(reviewRequest.getTitle())
-               // .watchedDate(reviewRequest.getWatchedDate())
+                .watchedDate(reviewRequest.getWatchedDate())
                 .content(reviewRequest.getContent())
                 .rating(reviewRequest.getRating())
                 .posterPath(reviewRequest.getPosterPath())
