@@ -45,7 +45,19 @@ public class MovieReviewController {
     }
 
     //삭제
-    //@DeleteMapping //삭제 주소 보류
-   // public ResponseEntity<Void> review
+    //일단 돌려 받을 값 없는 것을 상정하고 작성
+    @DeleteMapping("/delete/{id}") //삭제 주소 보류
+    public ResponseEntity<Void> deleteReview(@PathVariable int id){
+        service.deleteReview(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //수정
+    @PutMapping("/reviews/update/{id}")
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable int id, @RequestBody ReviewRequest request){
+        MovieReview updated = service.updateReview(id, request);
+        return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
+    }
+
 
 }
