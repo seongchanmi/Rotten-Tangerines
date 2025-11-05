@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -24,13 +25,13 @@ public class MovieReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_reviews_seq")
-    private Integer Id;
+    private Integer id;
 
     @Column(nullable = false, length = 255)
     private String title;
 
     @Column(name = "watched_Date")
-    private LocalDate watchedDate;
+    private Date watchedDate;
 
     @Column(length = 500)
     private String posterPath;
@@ -39,7 +40,7 @@ public class MovieReview {
     private String content;
 
     @Column(precision = 2,scale = 1)
-    private Double rating;
+    private Integer rating;
 
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;

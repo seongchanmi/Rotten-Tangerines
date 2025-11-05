@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,7 +16,7 @@ public class ReviewResponse {
 
     private String title;
 
-    //private watchtedDate;
+    private Date watchedDate;
 
     private String content;
 
@@ -46,11 +47,11 @@ public class ReviewResponse {
         return MovieReview.builder()
                 .id(this.id)
                 .title(this.title)
-                //.watchedDate(this.watchedDate)
+                .watchedDate(this.watchedDate)
                 .content(this.content)
                 .rating(this.rating)
                 .createdDate(this.createdDate)
-                .updateDate(this.updatedDate)
+                .updatedDate(this.updatedDate)
                 .posterPath(this.posterPath)
                 .build();
     }
