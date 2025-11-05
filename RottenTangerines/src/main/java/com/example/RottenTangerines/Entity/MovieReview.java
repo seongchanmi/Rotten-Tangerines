@@ -47,4 +47,23 @@ public class MovieReview {
 
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateWatchedDate(Date watchedDate) {
+        this.watchedDate = watchedDate;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateRating(Integer rating) {
+        this.rating = rating;
+    }
+    public void updatePosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
 }

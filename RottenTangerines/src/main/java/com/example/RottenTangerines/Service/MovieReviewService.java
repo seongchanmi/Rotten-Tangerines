@@ -21,7 +21,13 @@ public class MovieReviewService {
     //생성
     @Transactional
     public MovieReview register(ReviewRequest reviewRequest) {
-        MovieReview movieReview = new MovieReview(); //나중에 bulider 작업 필요쓰
+        MovieReview movieReview = MovieReview.builder()
+                .title(reviewRequest.getTitle())
+                .watchedDate(reviewRequest.getWatchedDate())
+                .content(reviewRequest.getContent())
+                .rating(reviewRequest.getRating())
+                .posterPath(reviewRequest.getPosterPath())
+                .build();
         return repo.save(movieReview);
     }
 
@@ -41,7 +47,11 @@ public class MovieReviewService {
     @Transactional
     public MovieReview updateReview(int movieId, MovieReview movieReview) {
         MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
-        // newReview.updateirorio dto를 받고 나서 작업쓰
+        newReview.updateTitle(movieReview.getTitle());
+        newReview.updateWatchedDate(movieReview.getWatchedDate());
+        newReview.updateContent(movieReview.getContent());
+        newReview.updateRating(movieReview.getRating());
+        newReview.updatePosterPath(movieReview.getPosterPath());
         return repo.save(newReview);
     }
 
