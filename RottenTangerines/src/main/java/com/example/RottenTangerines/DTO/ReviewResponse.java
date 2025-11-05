@@ -30,7 +30,7 @@ public class ReviewResponse {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime updatedDate;
 
-    public static ReviewResponse form(MovieReview movieReview){
+    public static ReviewResponse fromEntity(MovieReview movieReview){
         return ReviewResponse.builder()
                 .id(movieReview.getId())
                 .title(movieReview.getTitle())
