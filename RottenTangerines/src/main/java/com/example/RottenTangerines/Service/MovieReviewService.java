@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieReviewService {
 
-    private MovieReviewRepository repo;
+    private final MovieReviewRepository repo;
 
     //생성
     @Transactional

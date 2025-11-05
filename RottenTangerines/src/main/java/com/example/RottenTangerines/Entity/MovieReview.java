@@ -18,11 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "movie_reviews")
-@SequenceGenerator(
-        name = "movie_reviews_seq",
-        sequenceName = "movie_reviews_seq",
-        allocationSize = 1
-)
+
 public class MovieReview {
 
     @Id
@@ -46,6 +42,7 @@ public class MovieReview {
     private Integer rating;
 
     @Column(name = "created_date", updatable = false)
+    @Builder.Default
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "updated_date")
@@ -66,6 +63,7 @@ public class MovieReview {
     public void updateRating(Integer rating) {
         this.rating = rating;
     }
+
     public void updatePosterPath(String posterPath) {
         this.posterPath = posterPath;
     }

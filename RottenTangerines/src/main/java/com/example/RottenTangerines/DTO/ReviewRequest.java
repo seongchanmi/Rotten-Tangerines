@@ -2,6 +2,7 @@ package com.example.RottenTangerines.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.cglib.core.Local;
 
@@ -14,14 +15,14 @@ public class ReviewRequest {
     @NotBlank(message = "제목 필수 작성")
     private String title;
 
-    @NotBlank(message = "관람일 필수 작성")
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @NotNull(message = "관람일 필수 작성")
+    //@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date watchedDate;
 
     @NotBlank(message = "내용 필수 작성")
     private String content;
 
-    @NotBlank(message = "평점 필수 작성")
+    @NotNull(message = "평점 필수 작성")
     private Integer rating;
 
     @NotBlank(message = "사진 필수 작성")
