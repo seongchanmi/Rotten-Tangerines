@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>영화 수정 페이지</title>
+    <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: "Noto Sans KR", sans-serif;
+        }
+
+        body {
+          padding: 10px;
+        }
+
+        /* 상단 네비게이션 */
+        .navbar {
+          display: flex;
+          border: 2px solid black;
+        }
+
+        .nav-item {
+          flex: 0 0 100px;
+          text-align: center;
+          padding: 20px 0;
+          font-size: 1.5rem;
+          border-right: 2px solid #004b63;
+          cursor: pointer;
+        }
+
+        .nav-item:last-child {
+          border-right: none;
+        }
+
+        /* 전체 레이아웃 */
+        .container {
+          display: flex;
+          gap: 20px;
+          border: 2px solid #d36b00;
+          margin-top: 20px;
+          padding: 20px;
+          justify-content: space-between;
+        }
+
+        /* 왼쪽 */
+        .left {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          flex: 1;
+        }
+
+        .photo-box {
+          border: 2px solid #d36b00;
+          width: 200px;
+          height: 250px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          font-size: 1rem;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .photo-box img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .date {
+          border: 2px solid #d36b00;
+          width: 200px;
+          text-align: center;
+          padding: 10px 0;
+          font-size: 1.1rem;
+        }
+
+        /* 오른쪽 */
+        .right {
+          flex: 2;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .info-row {
+          display: flex;
+          gap: 10px;
+        }
+
+        .movie-title {
+          flex: 2;
+          border: 2px solid #d36b00;
+          padding: 8px;
+          font-size: 1.1rem;
+        }
+
+        .rating {
+          flex: 1;
+          border: 2px solid #d36b00;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          font-size: 1.3rem;
+          cursor: pointer;
+        }
+
+        .review {
+          border: 2px solid #d36b00;
+          height: 200px;
+          padding: 10px;
+          font-size: 1rem;
+          resize: none;
+        }
+
+        .btn-group {
+          display: flex;
+          justify-content: flex-end;
+          gap: 5px;
+        }
+
+        .btn {
+          border: 2px solid #d36b00;
+          background-color: white;
+          padding: 8px 20px;
+          font-size: 1.1rem;
+          cursor: pointer;
+        }
+
+        .btn:hover {
+          background-color: #ffe9d0;
+        }
+
+        input[type="file"] {
+          font-size: 0.9rem;
+        }
+
+        .orange {
+          font-size: 1.6rem;
+          cursor: pointer;
+          transition: transform 0.1s;
+        }
+
+        .orange:hover {
+          transform: scale(1.2);
+        }
+
+        .selected {
+          filter: grayscale(0%);
+        }
+
+        .unselected {
+          filter: grayscale(100%);
+        }
+    </style>
+</head>
+
+<body>
+<!-- 상단 메뉴 -->
+<header class="navbar">
+    <div class="nav-item" onclick="goHome()">홈</div>
+    <div class="nav-item" onclick="goRegister()">등록</div>
+</header>
+
+<!-- 메인 -->
+<main class="container">
+    <div class="left">
+        <div class="photo-box" id="photoBox">
+            <span>사진 미리보기</span>
+            <input type="file" id="photoInput" accept="image/*" />
+        </div>
+        <input type="date" class="date" id="dateInput" />
+    </div>
+
+    <div class="right">
+        <div class="info-row">
+            <input type="text" class="movie-title" id="movieInput" placeholder="영화 이름" />
+            <div class="rating" id="ratingBox">
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+            </div>
+        </div>
+        <textarea class="review" id="reviewInput" placeholder="리뷰를 수정하세요..."></textarea>
+
+        <div class="btn-group">
+            <button class="btn" id="editBtn">수정</button>
+            <button class="btn" id="deleteBtn">삭제</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // 사진 미리보기
+    const photoInput = document.getElementById("photoInput");
+    const photoBox = document.getElementById("photoBox");
+
+    photoInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          photoBox.innerHTML = `<img src="${e.target.result}" alt="미리보기 이미지">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 별점 클릭
+    const ratingBox = document.getElementById("ratingBox");
+    const oranges = ratingBox.querySelectorAll(".orange");
+    let selectedRating = 0;
+
+    oranges.forEach((orange, index) => {
+      orange.addEventListener("click", () => {
+        selectedRating = index + 1;
+        oranges.forEach((o, i) => {
+          if (i < selectedRating) {
+            o.classList.add("selected");
+            o.classList.remove("unselected");
+          } else {
+            o.classList.add("unselected");
+            o.classList.remove("selected");
+          }
+        });
+      });
+    });
+
+    // 수정 버튼
+    document.getElementById("editBtn").addEventListener("click", () => {
+      const movie = document.getElementById("movieInput").value;
+      const review = document.getElementById("reviewInput").value;
+      const date = document.getElementById("dateInput").value;
+      console.log("수정된 정보:", { movie, review, date, selectedRating });
+
+      // 등록 페이지로 이동
+      window.location.href = "register.html";
+    });
+
+    // 삭제 버튼
+    document.getElementById("deleteBtn").addEventListener("click", () => {
+      alert("삭제되었습니다. 홈으로 이동합니다.");
+      window.location.href = "index.html";
+    });
+
+    // 네비게이션 클릭
+    function goHome() {
+      window.location.href = "index.html";
+    }
+
+    function goRegister() {
+      window.location.href = "register.html";
+    }
+</script>
+</body>
+</html>
