@@ -34,7 +34,7 @@ public class ReviewResponse {
         return ReviewResponse.builder()
                 .id(movieReview.getId())
                 .title(movieReview.getTitle())
-                //.watchedDate(movieReview.getWatchedDate())
+                .watchedDate(movieReview.getWatchedDate())
                 .content(movieReview.getContent())
                 .rating(movieReview.getRating())
                 .createdDate(movieReview.getCreatedDate())
