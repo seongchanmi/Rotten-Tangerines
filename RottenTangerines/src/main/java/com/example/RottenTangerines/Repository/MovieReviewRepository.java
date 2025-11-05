@@ -1,4 +1,7 @@
 package com.example.RottenTangerines.Repository;
 
-public class MovieReviewRepository {
+import com.example.RottenTangerines.Entity.MovieReview;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MovieReviewRepository extends JpaRepository<MovieReview, Integer> {
 }
