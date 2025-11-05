@@ -1,6 +1,8 @@
 package com.example.RottenTangerines.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +26,7 @@ import java.time.LocalDateTime;
 public class MovieReview {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movie_reviews_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, length = 255)
@@ -39,11 +41,12 @@ public class MovieReview {
     @Column(nullable = false, length = 5000)
     private String content;
 
-    @Column(precision = 2,scale = 1)
+    @Min(1)
+    @Max(5)
     private Integer rating;
 
     @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
@@ -65,5 +68,9 @@ public class MovieReview {
     }
     public void updatePosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    public void updateUpdatedDate() {
+        this.updatedDate = LocalDateTime.now();
     }
 }

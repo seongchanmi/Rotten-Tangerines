@@ -52,6 +52,7 @@ public class MovieReviewService {
         newReview.updateContent(movieReview.getContent());
         newReview.updateRating(movieReview.getRating());
         newReview.updatePosterPath(movieReview.getPosterPath());
+        newReview.updateUpdatedDate();
         return repo.save(newReview);
     }
 
