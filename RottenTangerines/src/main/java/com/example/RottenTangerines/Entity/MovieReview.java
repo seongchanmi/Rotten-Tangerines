@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,7 +30,7 @@ public class MovieReview {
     @Column(name = "watched_Date")
     private Date watchedDate;
 
-    @Column(length = 500)
+    @Column(name = "poster_path")
     private String posterPath;
 
     @Column(nullable = false, length = 5000)
