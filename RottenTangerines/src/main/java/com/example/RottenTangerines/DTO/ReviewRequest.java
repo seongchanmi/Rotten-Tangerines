@@ -1,14 +1,11 @@
 package com.example.RottenTangerines.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Getter
 public class ReviewRequest {

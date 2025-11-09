@@ -7,9 +7,14 @@ import com.example.RottenTangerines.Service.MovieReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -20,11 +25,24 @@ public class MovieReviewController {
 
     private final MovieReviewService service;
 
-    //등록
-    @PostMapping("/reviews/new")
+    // JSON 전용 등록
+    @PostMapping(value = "/reviews/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewResponse> create(@RequestBody @Valid ReviewRequest request){
         MovieReview saved = service.register(request);
         return ResponseEntity.ok(ReviewResponse.fromEntity(saved));
+    }
+
+    // 이미지 포함 등록
+    @PostMapping(value = "/reviews/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReviewResponse> createImage(
+            @RequestParam("title") String title,
+            @RequestParam("watchedDate") Date watchedDate,
+            @RequestParam("content") String content,
+            @RequestParam("rating") Integer rating,
+            @RequestParam(value = "posterPath", required = false) MultipartFile poster
+            ){
+           ReviewResponse saved = service.registerPoster(title, watchedDate, content, rating, poster);
+        return ResponseEntity.ok(saved);
     }
 
     //전체 조회

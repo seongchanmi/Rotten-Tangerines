@@ -1,14 +1,17 @@
 package com.example.RottenTangerines.Service;
 
 import com.example.RottenTangerines.DTO.ReviewRequest;
+import com.example.RottenTangerines.DTO.ReviewResponse;
 import com.example.RottenTangerines.Entity.MovieReview;
 import com.example.RottenTangerines.Repository.MovieReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -17,6 +20,7 @@ import java.util.List;
 public class MovieReviewService {
 
     private final MovieReviewRepository repo;
+    private final FileImageService fileImageService;
 
     //생성
     @Transactional
@@ -26,7 +30,6 @@ public class MovieReviewService {
                 .watchedDate(reviewRequest.getWatchedDate())
                 .content(reviewRequest.getContent())
                 .rating(reviewRequest.getRating())
-                .posterPath(reviewRequest.getPosterPath())
                 .build();
         return repo.save(movieReview);
     }
@@ -61,5 +64,30 @@ public class MovieReviewService {
     public void deleteReview(int movieId) {
         MovieReview movieReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
         repo.deleteById(movieId); //위에 적은거 알아서 실행되고 여기까지 안내려오는거?
+
+        // (사진) 파일 삭제
+        fileImageService.deleteposter(movieReview.getPosterPath());
+    }
+// 이미지 포함 등록
+@Transactional
+    public ReviewResponse registerPoster(String title, Date watchedDate, String content, Integer rating, MultipartFile poster) {
+        // 필수 값 설정
+        if(title == null || title.isBlank()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "제목은 필수입니다.");
+        }
+
+        // 파일 저장
+        String posterPath = (poster != null && !poster.isEmpty()) ? fileImageService.store(poster) : null;
+
+        MovieReview movieReview = MovieReview.builder()
+                .title(title)
+                .watchedDate(watchedDate)
+                .content(content)
+                .rating(rating)
+                .posterPath(posterPath)
+                .build();
+        MovieReview saved = repo.save(movieReview);
+        return ReviewResponse.fromEntity(saved);
+
     }
 }
