@@ -46,18 +46,34 @@ public class MovieReviewService {
         return repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
     }
 
-    //수정
+
+    // 이미지를 포함한 수정
     @Transactional
-    public MovieReview updateReview(int movieId, ReviewRequest reviewRequest) {
+    public MovieReview updateImageReview(int movieId, ReviewRequest request, String title, Date watchedDate, String content, int rating, MultipartFile poster){
         MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
-        newReview.updateTitle(reviewRequest.getTitle());
-        newReview.updateWatchedDate(reviewRequest.getWatchedDate());
-        newReview.updateContent(reviewRequest.getContent());
-        newReview.updateRating(reviewRequest.getRating());
-        newReview.updatePosterPath(reviewRequest.getPosterPath());
+        String posterPath = (poster != null && !poster.isEmpty()) ? fileImageService.store(poster) : null;
+        newReview.updateTitle(request.getTitle());
+        newReview.updateWatchedDate(request.getWatchedDate());
+        newReview.updateContent(request.getContent());
+        newReview.updateRating(request.getRating());
+        newReview.updatePosterPath(request.getPosterPath());
         newReview.updateUpdatedDate();
         return repo.save(newReview);
+
     }
+
+//    //수정
+//    @Transactional
+//    public MovieReview updateReview(int movieId, ReviewRequest reviewRequest) {
+//        MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
+//        newReview.updateTitle(reviewRequest.getTitle());
+//        newReview.updateWatchedDate(reviewRequest.getWatchedDate());
+//        newReview.updateContent(reviewRequest.getContent());
+//        newReview.updateRating(reviewRequest.getRating());
+//        newReview.updatePosterPath(reviewRequest.getPosterPath());
+//        newReview.updateUpdatedDate();
+//        return repo.save(newReview);
+//    }
 
     //삭제
     @Transactional

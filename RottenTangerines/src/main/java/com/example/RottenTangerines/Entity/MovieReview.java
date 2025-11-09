@@ -59,9 +59,7 @@ public class MovieReview {
         this.content = content;
     }
 
-    public void updateRating(Integer rating) {
-        this.rating = rating;
-    }
+    public void updateRating(Integer rating) { this.rating = rating; }
 
     public void updatePosterPath(String posterPath) {
         this.posterPath = posterPath;
