@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap');
+
+/* 공통 스타일 */
+body {
+  font-family: "Gowun Batang", serif;
+  background-color: #fffaf3;
+  margin: 0;
+  padding: 0;
+}
+
+/* placeholder (사용자 입력할때 부분! 여기만 폰트 다르면 좀그럴까봐 추가) */
+input::placeholder,
+textarea::placeholder {
+  font-family: "Gowun Batang", serif;
+  color: #b8a78f;
+}
+
+/* 카드형 영화 목록 (홈 화면용) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.card {
+  background: #fffdf7;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(255, 163, 72, 0.2);
+  text-align: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 14px rgba(255, 163, 72, 0.3);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.movie-name {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.rating {
+  color: #ff9c33;
+  font-size: 1.2rem;
+  margin-top: 5px;
+}
+
+/* 영화 등록 (new.html용) */
+.container {
+  display: flex;
+  background: #fffdf7;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(230, 160, 0, 0.2);
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 900px;
+  gap: 30px;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.photo-box {
+  width: 220px;
+  height: 260px;
+  border-radius: 15px;
+  background: #fff7e6;
+  border: 3px dashed #ff9c33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+input[type="file"] {
+  margin-top: 10px;
+}
+
+.date {
+  border: none;
+  background: #fff3da;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #ffd18b;
+  font-size: 1rem;
+}
+
+.right {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review {
+  width: 100%;
+  height: 200px;
+  resize: none;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+
+/* Navbar 스타일  */
+.navbar {
+  background-color: #fff7e6;
+  border-bottom: 2px solid #ffd18b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 15px 0;
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 4px 8px rgba(255, 184, 76, 0.2);
+  font-family: 'Gowun Batang', serif;
+}
+
+.nav-item {
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #ff9c33;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+
+.nav-item:hover {
+  background-color: #fff3da;
+  box-shadow: 0 0 6px rgba(255, 163, 72, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 상세 페이지(detail.html) - new.html과 동일한 디자인 */
+.detail-container {
+  display: flex;
+  background: #fffdf7;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(230, 160, 0, 0.2);
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 900px;
+  gap: 30px;
+}
+
+.detail-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.detail-photo-box {
+  width: 220px;
+  height: 260px;
+  border-radius: 15px;
+  background: #fff7e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-date {
+  border: none;
+  background: #fff3da;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #ffd18b;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.detail-right {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.detail-title {
+  flex: 2;
+  border: 2px solid #ffd18b;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff8ee;
+  font-size: 1.2rem;
+}
+
+.detail-rating {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  background: #fff3da;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.orange {
+  font-size: 1.8rem;
+}
+
+.orange.unselected {
+  opacity: 0.3;
+}
+
+.detail-review {
+  border: 2px solid #ffd18b;
+  border-radius: 10px;
+  height: 200px;
+  padding: 15px;
+  font-size: 1rem;
+  background: #fff8ee;
+  resize: none;
+}
+
+/* 버튼 스타일 수정/삭제 */
+.btn-group {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  margin-top: auto; /* 아래쪽으로 밀기 */
+  gap: 12px; /* 버튼 사이 간격 추가 */
+}
+
+
+.btn {
+  background-color: #ffb84c;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 25px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 25px; /* 버튼 전체 공통 위 간격 */
+}
+
+
+.btn:hover {
+  background-color: #ff9c33;
+  box-shadow: 0 0 8px rgba(255, 163, 72, 0.6);
+}
+
+.right {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative; /* 수정: 버튼 절대 위치를 위해 추가 */
+}
+
+/* 버튼 위치 수정: 오른쪽 아래 */
+#saveBtn {
+  margin-top: 25px !important; /* 버튼 위쪽에 여유 공간 추가 */
+  display: block;
+  align-self: flex-start; /* 혹시 flex 내부에 있을 때 밀착 방지 */
+  position: absolute;   /* 오른쪽 아래에 붙게 */
+  bottom: 0;
+  right: 0;
+  padding: 8px 16px;   /* 버튼 크기 작게 */
+  font-size: 0.9rem;   /* 글자 크기 조절 */
+}
