@@ -17,6 +17,7 @@
 <main class="grid" id="movieGrid"></main>
 
 <script>
+    //공통 nav파일을 자동으로 불러와서 붙임
     fetch("navbar.html")
       .then(res => res.text())
       .then(html => {
@@ -30,21 +31,43 @@
         });
       });
 
-    // 영화 카드 생성
-    Object.values(movieData).forEach(movie => {
+   // 영화 목록을 백엔드에서 가져와서 화면에 표시
+fetch("/api/home")  // 백엔드 GET /api/home 경로
+  .then(res => {
+    if (!res.ok) throw new Error("서버 응답 오류: " + res.status);
+    return res.json();
+  })
+  .then(reviewList => {
+    const grid = document.getElementById("movieGrid");
+    grid.innerHTML = ""; // 기존 카드 초기화
+
+    reviewList.forEach(review => {
       const card = document.createElement("div");
       card.className = "card";
+
+      const title = review.title || "제목 없음";
+      const poster = review.posterPath || "/images/default.jpg";
+      const rating = Number(review.rating) || 0;
+
       card.innerHTML = `
-        <img src="${movie.posterPath}" alt="${movie.title}" />
-        <div class="movie-name">${movie.title}</div>
-        <div class="rating">${"🍊".repeat(movie.rating)}</div>
+        <img src="${poster}" alt="${title}" />
+        <div class="movie-name">${title}</div>
+        <div class="rating">${"🍊".repeat(rating)}</div>
       `;
 
       card.addEventListener("click", () => {
-        window.location.href = `detail.html?id=${movie.id}`;
+        window.location.href = `detail.html?id=${review.id}`;
       });
-      document.getElementById("movieGrid").appendChild(card);
+
+      grid.appendChild(card);
     });
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("movieGrid").innerHTML =
+      "<p>등록된 리뷰가 없습니다.</p>";
+  });
+
 </script>
 </body>
 </html>

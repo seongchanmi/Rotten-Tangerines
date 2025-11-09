@@ -64,32 +64,40 @@
       })
     );
 
-    // 저장 버튼 클릭 시 알림 + 홈으로 이동
-document.getElementById("saveBtn").addEventListener("click", () => {
-  // 서버로 데이터 보내기
-  fetch('/movies', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: titleInput.value,
-      watchedDate: watchedDateInput.value,
-      content: contentInput.value,
-      posterPath: uploadedImageSrc, // 이미지 업로드 후 URL 받아서 넣기
-      rating: selectedRating
-    })
-  })
-  .then(res => {
-    if(res.ok){
-      alert("저장 완료! 홈으로 이동합니다.");
-      window.location.href = "home.html";
-    } else {
-      alert("저장 실패");
-    }
-  })
-  .catch(err => alert("서버 오류 발생"));
+      // 저장 버튼 클릭 시 서버 POST
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const titleInput = document.getElementById("titleInput");
+      const watchedDateInput = document.getElementById("watchedDateInput");
+      const contentInput = document.getElementById("contentInput");
 
+      if(!titleInput.value || !watchedDateInput.value){
+        alert("영화 제목과 관람일은 필수입니다!");
+        return;
+      }
 
-      window.location.href = "home.html";
+      fetch('/api/reviews/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: titleInput.value,
+          watchedDate: watchedDateInput.value,
+          content: contentInput.value,
+          posterPath: uploadedImageSrc,
+          rating: selectedRating
+        })
+      })
+      .then(res => {
+        if(res.ok){
+          alert("등록 완료! 홈으로 이동합니다.");
+          window.location.href = "home.html";
+        } else {
+          alert("등록 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("서버 오류 발생");
+      });
     });
 </script>
 </body>

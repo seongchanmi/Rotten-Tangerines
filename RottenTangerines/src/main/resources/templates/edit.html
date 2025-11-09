@@ -48,48 +48,44 @@
       .catch(err => console.error("네비게이션 로드 오류:", err));
 
 
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-        const movie = movieData[id];
+         // URL에서 id 가져오기
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
 
-        const movieImg = document.getElementById("movieImg");
-        const titleInput = document.getElementById("titleInput");
-        const watchedDateInput = document.getElementById("watchedDateInput");
-        const contentInput = document.getElementById("contentInput");
-        const ratingBox = document.getElementById("ratingBox");
-        const photoInput = document.getElementById("photoInput");
+    const movieImg = document.getElementById("movieImg");
+    const titleInput = document.getElementById("titleInput");
+    const watchedDateInput = document.getElementById("watchedDateInput");
+    const contentInput = document.getElementById("contentInput");
+    const ratingBox = document.getElementById("ratingBox");
+    const photoInput = document.getElementById("photoInput");
 
-        let selectedRating = 0;
+    let selectedRating = 0;
 
-        if(movie){
-          movieImg.src = movie.posterPath;
-          titleInput.value = movie.title;
-          watchedDateInput.value = movie.watchedDate;
-          contentInput.value = movie.content;
-          selectedRating = movie.rating;
-          ratingBox.textContent = "🍊".repeat(selectedRating);
-        } else {
-          document.querySelector("main").innerHTML = "<p>영화 정보를 찾을 수 없습니다.</p>";
-        }
+    // 백엔드에서 영화 리뷰 정보 가져오기
+    fetch(`/api/reviews/${id}`)
+      .then(res => res.json())
+      .then(review => {
+        movieImg.src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
+        titleInput.value = review.title;
+        watchedDateInput.value = review.watchedDate;
+        contentInput.value = review.content;
+        selectedRating = review.rating || 0;
+        ratingBox.textContent = "🍊".repeat(selectedRating);
+      })
+      .catch(err => {
+        console.error(err);
+        document.querySelector("main").innerHTML = "<p>영화 정보를 찾을 수 없습니다.</p>";
+      });
 
-        // 사진 미리보기
-        photoInput.addEventListener("change", e => {
-          const file = e.target.files[0];
-          if(file){
-            const reader = new FileReader();
-            reader.onload = e => { movieImg.src = e.target.result; };
-            reader.readAsDataURL(file);
-          }
-        });
 
-        // 별점 선택
-        ratingBox.addEventListener("click", () => {
-          selectedRating = prompt("별점을 1~5로 입력하세요") || selectedRating;
-          selectedRating = Math.min(Math.max(Number(selectedRating),1),5);
-          ratingBox.textContent = "🍊".repeat(selectedRating);
-        });
+    // 별점 선택
+    ratingBox.addEventListener("click", () => {
+      selectedRating = prompt("별점을 1~5로 입력하세요") || selectedRating;
+      selectedRating = Math.min(Math.max(Number(selectedRating),1),5);
+      ratingBox.textContent = "🍊".repeat(selectedRating);
+    });
 
-     // 수정 완료 버튼: 서버에 PUT 요청
+    // 수정 완료 버튼 클릭 → PUT 요청
     document.getElementById("saveBtn").addEventListener("click", () => {
       const updatedMovie = {
         title: titleInput.value,
@@ -99,7 +95,7 @@
         rating: selectedRating
       };
 
-      fetch(`/movies/${id}`, {
+      fetch(`/api/reviews/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedMovie)

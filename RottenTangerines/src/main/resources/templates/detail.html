@@ -35,31 +35,48 @@
 </main>
 
 <script>
-    // navbar.html 불러오기
+    // URL에서 id 가져오기
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    // navbar 불러오기
     fetch("navbar.html")
       .then(res => res.text())
       .then(html => {
         document.getElementById("navbar").innerHTML = html;
-
-       // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
         document.getElementById("homeBtn").addEventListener("click", () => {
           window.location.href = "home.html";
         });
         document.getElementById("newBtn").addEventListener("click", () => {
           window.location.href = "new.html";
         });
-      })
-      .catch(err => console.error("네비게이션 로드 오류:", err));
+      });
 
-    // 수정 버튼 클릭 → edit.html 페이지 이동
+    // 백엔드에서 리뷰 정보 가져오기
+    fetch(`/api/reviews/${id}`)
+      .then(res => res.json())
+      .then(review => {
+        document.querySelector(".detail-title").value = review.title;
+        document.querySelector(".detail-review").value = review.content;
+        document.querySelector(".detail-date").textContent = review.watchedDate;
+        document.querySelector(".detail-photo-box img").src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
+
+        // 평점 표시
+        const ratingBox = document.querySelector(".detail-rating");
+        const rating = Number(review.rating) || 0;
+        ratingBox.innerHTML = "🍊".repeat(rating) + "🍊".repeat(5 - rating).replace(/🍊/g, '<span class="orange unselected">🍊</span>');
+      })
+      .catch(err => console.error("리뷰 로드 오류:", err));
+
+    // 수정 버튼 → edit.html로 이동
     document.getElementById("editBtn").addEventListener("click", () => {
       window.location.href = `edit.html?id=${id}`;
     });
 
-    // 삭제 버튼 클릭 → 서버에 DELETE 요청 후 홈으로 이동
+    // 삭제 버튼 → DELETE 요청
     document.getElementById("deleteBtn").addEventListener("click", () => {
       if(confirm("정말 삭제하시겠습니까?")){
-        fetch(`/movies/${id}`, { method: "DELETE" })
+        fetch(`/api/delete/${id}`, { method: "DELETE" })
           .then(res => {
             if(res.ok){
               alert("삭제 완료! 홈으로 이동합니다.");
