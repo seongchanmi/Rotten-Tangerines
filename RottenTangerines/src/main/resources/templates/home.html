@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>Rotten Tangerines</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<!-- 공통 네비게이션 -->
+<div id="navbar"></div>
+
+<!--영화 카드가 JS에서 동적으로 생성-->
+<main class="grid" id="movieGrid"></main>
+
+<script>
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+        // HTML이 로드된 뒤에 이벤트 연결
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      });
+
+    // 영화 카드 생성
+    Object.values(movieData).forEach(movie => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${movie.posterPath}" alt="${movie.title}" />
+        <div class="movie-name">${movie.title}</div>
+        <div class="rating">${"🍊".repeat(movie.rating)}</div>
+      `;
+
+      card.addEventListener("click", () => {
+        window.location.href = `detail.html?id=${movie.id}`;
+      });
+      document.getElementById("movieGrid").appendChild(card);
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

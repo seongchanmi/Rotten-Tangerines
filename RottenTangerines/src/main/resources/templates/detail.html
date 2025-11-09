@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>영화 리뷰 상세보기</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="navbar"></div>
+
+<main class="detail-container">
+
+    <!-- 왼쪽: 포스터 + 관람일 -->
+    <div class="detail-left">
+        <div class="detail-photo-box">
+            <img src="https://via.placeholder.com/220x260.png?text=포스터" alt="영화 포스터" />
+        </div>
+        <p class="detail-date"></p>
+    </div>
+
+    <!-- 오른쪽: 영화 정보 + 수정/삭제 버튼 -->
+    <div class="detail-right">
+        <div class="info-row">
+            <input type="text" class="detail-title"  readonly />
+            <div class="detail-rating">🍊🍊🍊🍊🍊</div>
+        </div>
+        <textarea class="detail-review" readonly>
+        </textarea>
+
+        <div class="btn-group">
+            <button class="btn">수정</button>
+            <button class="btn">삭제</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // navbar.html 불러오기
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+
+       // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      })
+      .catch(err => console.error("네비게이션 로드 오류:", err));
+
+    // 수정 버튼 클릭 → edit.html 페이지 이동
+    document.getElementById("editBtn").addEventListener("click", () => {
+      window.location.href = `edit.html?id=${id}`;
+    });
+
+    // 삭제 버튼 클릭 → 서버에 DELETE 요청 후 홈으로 이동
+    document.getElementById("deleteBtn").addEventListener("click", () => {
+      if(confirm("정말 삭제하시겠습니까?")){
+        fetch(`/movies/${id}`, { method: "DELETE" })
+          .then(res => {
+            if(res.ok){
+              alert("삭제 완료! 홈으로 이동합니다.");
+              window.location.href = "home.html";
+            } else {
+              alert("삭제에 실패했습니다.");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("서버 오류가 발생했습니다.");
+          });
+      }
+    });
+</script>
+</body>
+</html>
