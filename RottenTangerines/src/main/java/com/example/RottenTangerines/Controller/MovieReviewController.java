@@ -7,14 +7,12 @@ import com.example.RottenTangerines.Service.MovieReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -70,24 +68,17 @@ public class MovieReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    //수정
-//    @PutMapping("/reviews/update/{id}")
-//    public ResponseEntity<ReviewResponse> updateReview(@PathVariable int id, @RequestBody ReviewRequest request){
-//        MovieReview updated = service.updateReview(id, request);
-//        return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
-//    }
-
     // 이미지 수정
+    //(value = "/reviews/update/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PutMapping(value = "/reviews/update/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewResponse> updateReviewImage(@PathVariable int id,
-                                                            @RequestParam ReviewRequest request,
                                                             @RequestParam("title") String title,
                                                             @RequestParam("watchedDate") Date watchedDate,
                                                             @RequestParam("content") String content,
                                                             @RequestParam("rating") Integer rating,
                                                             @RequestParam(value = "posterPath", required = false) MultipartFile poster
     ){
-        MovieReview updated = service.updateImageReview(id, request, title, watchedDate, content, rating, poster);
+        MovieReview updated = service.updateImageReview(id, title, watchedDate, content, rating, poster);
         return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
 
     }

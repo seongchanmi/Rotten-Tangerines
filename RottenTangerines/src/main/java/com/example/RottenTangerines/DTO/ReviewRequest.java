@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 
@@ -15,7 +16,7 @@ public class ReviewRequest {
 
     @NotNull(message = "관람일 필수 작성")
     @Column(nullable = false)
-    //@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date watchedDate;
 
     @NotBlank(message = "내용 필수 작성")

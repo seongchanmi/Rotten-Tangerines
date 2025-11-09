@@ -5,6 +5,7 @@ import com.example.RottenTangerines.DTO.ReviewResponse;
 import com.example.RottenTangerines.Entity.MovieReview;
 import com.example.RottenTangerines.Repository.MovieReviewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.sql.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -49,31 +51,20 @@ public class MovieReviewService {
 
     // 이미지를 포함한 수정
     @Transactional
-    public MovieReview updateImageReview(int movieId, ReviewRequest request, String title, Date watchedDate, String content, int rating, MultipartFile poster){
+    public MovieReview updateImageReview(int movieId, String title, Date watchedDate, String content, int rating, MultipartFile poster){
         MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
+        fileImageService.deleteposter(newReview.getPosterPath());
         String posterPath = (poster != null && !poster.isEmpty()) ? fileImageService.store(poster) : null;
-        newReview.updateTitle(request.getTitle());
-        newReview.updateWatchedDate(request.getWatchedDate());
-        newReview.updateContent(request.getContent());
-        newReview.updateRating(request.getRating());
-        newReview.updatePosterPath(request.getPosterPath());
-        newReview.updateUpdatedDate();
-        return repo.save(newReview);
 
+        //fileImageService.deleteposter(movieReview.getPosterPath());
+            newReview.updateTitle(title);
+            newReview.updateWatchedDate(watchedDate);
+            newReview.updateContent(content);
+            newReview.updateRating(rating);
+            newReview.updatePosterPath(posterPath);
+            newReview.updateUpdatedDate();
+            return repo.save(newReview);
     }
-
-//    //수정
-//    @Transactional
-//    public MovieReview updateReview(int movieId, ReviewRequest reviewRequest) {
-//        MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
-//        newReview.updateTitle(reviewRequest.getTitle());
-//        newReview.updateWatchedDate(reviewRequest.getWatchedDate());
-//        newReview.updateContent(reviewRequest.getContent());
-//        newReview.updateRating(reviewRequest.getRating());
-//        newReview.updatePosterPath(reviewRequest.getPosterPath());
-//        newReview.updateUpdatedDate();
-//        return repo.save(newReview);
-//    }
 
     //삭제
     @Transactional
@@ -84,8 +75,8 @@ public class MovieReviewService {
         // (사진) 파일 삭제
         fileImageService.deleteposter(movieReview.getPosterPath());
     }
-// 이미지 포함 등록
-@Transactional
+    // 이미지 포함 등록
+    @Transactional
     public ReviewResponse registerPoster(String title, Date watchedDate, String content, Integer rating, MultipartFile poster) {
         // 필수 값 설정
         if(title == null || title.isBlank()){
