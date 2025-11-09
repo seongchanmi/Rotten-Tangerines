@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>Rotten Tangerines</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<!-- 공통 네비게이션 -->
+<div id="navbar"></div>
+
+<!--영화 카드가 JS에서 동적으로 생성-->
+<main class="grid" id="movieGrid"></main>
+
+<script>
+    //공통 nav파일을 자동으로 불러와서 붙임
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+        // HTML이 로드된 뒤에 이벤트 연결
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      });
+
+   // 영화 목록을 백엔드에서 가져와서 화면에 표시
+fetch("/api/home")  // 백엔드 GET /api/home 경로
+  .then(res => {
+    if (!res.ok) throw new Error("서버 응답 오류: " + res.status);
+    return res.json();
+  })
+  .then(reviewList => {
+    const grid = document.getElementById("movieGrid");
+    grid.innerHTML = ""; // 기존 카드 초기화
+
+    reviewList.forEach(review => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = review.title || "제목 없음";
+      const poster = review.posterPath || "/images/default.jpg";
+      const rating = Number(review.rating) || 0;
+
+      card.innerHTML = `
+        <img src="${poster}" alt="${title}" />
+        <div class="movie-name">${title}</div>
+        <div class="rating">${"🍊".repeat(rating)}</div>
+      `;
+
+      card.addEventListener("click", () => {
+        window.location.href = `detail.html?id=${review.id}`;
+      });
+
+      grid.appendChild(card);
+    });
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("movieGrid").innerHTML =
+      "<p>등록된 리뷰가 없습니다.</p>";
+  });
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

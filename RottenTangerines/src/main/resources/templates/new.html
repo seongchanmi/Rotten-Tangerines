@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>영화 리뷰 등록</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+<div id="navbar"></div>
+
+<main class="container">
+    <div class="left">
+        <div class="photo-box" id="photoBox">
+            <span>사진 업로드</span>
+            <input type="file" id="photoInput" accept="image/*" />
+        </div>
+        <input type="date" class="date" id="watchedDateInput" />
+    </div>
+
+    <div class="right">
+        <div class="info-row">
+            <input type="text" class="movie-title" id="titleInput" placeholder="영화 이름을 입력하세요" />
+            <div class="rating" id="ratingBox">
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+                <span class="orange unselected">🍊</span>
+            </div>
+        </div>
+        <textarea class="review" id="contentInput" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
+        <button class="btn" id="saveBtn">저장</button>
+    </div>
+</main>
+
+<script>
+    // navbar.html 불러오기
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+
+       // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      })
+      .catch(err => console.error("네비게이션 로드 오류:", err));
+
+    // 별점 선택 기능
+    const ratingBox = document.getElementById("ratingBox");
+    const oranges = ratingBox.querySelectorAll(".orange");
+    let selectedRating = 0;
+    oranges.forEach((o, i) =>
+      o.addEventListener("click", () => {
+        selectedRating = i + 1;
+        oranges.forEach((x, j) =>
+          x.classList.toggle("unselected", j >= selectedRating)
+        );
+      })
+    );
+
+      // 저장 버튼 클릭 시 서버 POST
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const titleInput = document.getElementById("titleInput");
+      const watchedDateInput = document.getElementById("watchedDateInput");
+      const contentInput = document.getElementById("contentInput");
+
+      if(!titleInput.value || !watchedDateInput.value){
+        alert("영화 제목과 관람일은 필수입니다!");
+        return;
+      }
+
+      fetch('/api/reviews/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: titleInput.value,
+          watchedDate: watchedDateInput.value,
+          content: contentInput.value,
+          posterPath: uploadedImageSrc,
+          rating: selectedRating
+        })
+      })
+      .then(res => {
+        if(res.ok){
+          alert("등록 완료! 홈으로 이동합니다.");
+          window.location.href = "home.html";
+        } else {
+          alert("등록 실패");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("서버 오류 발생");
+      });
+    });
+</script>
+</body>
+</html>
