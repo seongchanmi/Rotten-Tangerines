@@ -24,7 +24,7 @@ public class MovieReviewService {
     private final MovieReviewRepository repo;
     private final FileImageService fileImageService;
 
-    //생성
+    // 생성
     @Transactional
     public MovieReview register(ReviewRequest reviewRequest) {
         MovieReview movieReview = MovieReview.builder()
@@ -36,13 +36,13 @@ public class MovieReviewService {
         return repo.save(movieReview);
     }
 
-    //전체 조회
+    // 전체 조회
     @Transactional
     public List<MovieReview> findAll() {
         return repo.findAll();
     }
 
-    //개별 조회
+    // 개별 조회
     @Transactional
     public MovieReview findByMovieId(int movieId) {
         return repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
