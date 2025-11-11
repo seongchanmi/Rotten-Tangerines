@@ -15,18 +15,17 @@
         <div class="detail-photo-box">
             <img src="https://via.placeholder.com/220x260.png?text=포스터" alt="영화 포스터" />
         </div>
-        <p class="detail-date"></p>
+        <p class="detail-date" th:text="${review.watchedDate}">></p>
+
     </div>
 
     <!-- 오른쪽: 영화 정보 + 수정/삭제 버튼 -->
     <div class="detail-right">
         <div class="info-row">
-            <span th:text="${review.title}">아직 제목 없음</span>
-            <span th:text="${review.watchedDate}">날짜 없음</span>
-            <!-- <input type="text" class="detail-title"  readonly /> -->
+            <div type="text" class="detail-title" th:text="${review.title}">아직 제목 없음</div>
             <div class="detail-rating">🍊🍊🍊🍊🍊</div>
         </div>
-        <textarea class="detail-review" readonly>
+        <textarea class="detail-review" th:text="${review.content}">아직 내용 없음>
         </textarea>
 
         <div class="btn-group">

@@ -14,15 +14,15 @@
             <img id="movieImg" alt="영화 포스터" />
             <input type="file" id="photoInput" accept="image/*" />
         </div>
-        <input type="date" class="date" id="watchedDateInput" />
+        <input type="date" class="date" id="watchedDateInput" th:value="${review.watchedDate}"/>
     </div>
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="titleInput" />
-            <div id="ratingBox" class="rating"></div>
+            <input type="text" class="movie-title" id="titleInput" th:value="${review.title}"/>
+            <div class="detail-rating">🍊🍊🍊🍊🍊</div>
         </div>
-        <textarea class="review" id="contentInput"></textarea>
+        <input class="review" id="contentInput" th:value="${review.content}">
         <div class="btn-group">
             <button class="btn" id="saveBtn">수정완료</button>
         </div>
@@ -32,7 +32,7 @@
 <script>
 
 
-   <!-- fetch("navbar.html")
+<!-- fetch("navbar.html")
       .then(res => res.text())
       .then(html => {
         document.getElementById("navbar").innerHTML = html;
@@ -112,7 +112,7 @@
         console.error(err);
         alert("서버 오류가 발생했습니다.");
       });
-    });-->
+    }); -->
 </script>
 </body>
 </html>
