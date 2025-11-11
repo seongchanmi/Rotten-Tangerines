@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>영화 리뷰 상세보기</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="navbar"></div>
+
+<main class="detail-container">
+
+    <!-- 왼쪽: 포스터 + 관람일 -->
+    <div class="detail-left">
+        <div class="detail-photo-box">
+            <img src="https://via.placeholder.com/220x260.png?text=포스터" alt="영화 포스터" />
+        </div>
+        <p class="detail-date"></p>
+    </div>
+
+    <!-- 오른쪽: 영화 정보 + 수정/삭제 버튼 -->
+    <div class="detail-right">
+        <div class="info-row">
+            <input type="text" class="detail-title"  readonly />
+            <div class="detail-rating">🍊🍊🍊🍊🍊</div>
+        </div>
+        <textarea class="detail-review" readonly>
+        </textarea>
+
+        <div class="btn-group">
+            <button class="btn">수정</button>
+            <button class="btn">삭제</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // URL에서 id 가져오기
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    // navbar 불러오기
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      });
+
+    // 백엔드에서 리뷰 정보 가져오기
+    fetch(`/api/reviews/${id}`)
+      .then(res => res.json())
+      .then(review => {
+        document.querySelector(".detail-title").value = review.title;
+        document.querySelector(".detail-review").value = review.content;
+        document.querySelector(".detail-date").textContent = review.watchedDate;
+        document.querySelector(".detail-photo-box img").src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
+
+        // 평점 표시
+        const ratingBox = document.querySelector(".detail-rating");
+        const rating = Number(review.rating) || 0;
+        ratingBox.innerHTML = "🍊".repeat(rating) + "🍊".repeat(5 - rating).replace(/🍊/g, '<span class="orange unselected">🍊</span>');
+      })
+      .catch(err => console.error("리뷰 로드 오류:", err));
+
+    // 수정 버튼 → edit.html로 이동
+    document.getElementById("editBtn").addEventListener("click", () => {
+      window.location.href = `edit.html?id=${id}`;
+    });
+
+    // 삭제 버튼 → DELETE 요청
+    document.getElementById("deleteBtn").addEventListener("click", () => {
+      if(confirm("정말 삭제하시겠습니까?")){
+        fetch(`/api/delete/${id}`, { method: "DELETE" })
+          .then(res => {
+            if(res.ok){
+              alert("삭제 완료! 홈으로 이동합니다.");
+              window.location.href = "home.html";
+            } else {
+              alert("삭제에 실패했습니다.");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("서버 오류가 발생했습니다.");
+          });
+      }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>영화 리뷰 수정</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="navbar"></div>
+
+<main class="container">
+    <div class="left">
+        <div class="photo-box" id="photoBox">
+            <img id="movieImg" alt="영화 포스터" />
+            <input type="file" id="photoInput" accept="image/*" />
+        </div>
+        <input type="date" class="date" id="watchedDateInput" />
+    </div>
+
+    <div class="right">
+        <div class="info-row">
+            <input type="text" class="movie-title" id="titleInput" />
+            <div id="ratingBox" class="rating"></div>
+        </div>
+        <textarea class="review" id="contentInput"></textarea>
+        <div class="btn-group">
+            <button class="btn" id="saveBtn">수정완료</button>
+        </div>
+    </div>
+</main>
+
+<script>
+
+
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+
+        // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
+        document.getElementById("homeBtn").addEventListener("click", () => {
+          window.location.href = "home.html";
+        });
+        document.getElementById("newBtn").addEventListener("click", () => {
+          window.location.href = "new.html";
+        });
+      })
+      .catch(err => console.error("네비게이션 로드 오류:", err));
+
+
+         // URL에서 id 가져오기
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const movieImg = document.getElementById("movieImg");
+    const titleInput = document.getElementById("titleInput");
+    const watchedDateInput = document.getElementById("watchedDateInput");
+    const contentInput = document.getElementById("contentInput");
+    const ratingBox = document.getElementById("ratingBox");
+    const photoInput = document.getElementById("photoInput");
+
+    let selectedRating = 0;
+
+    // 백엔드에서 영화 리뷰 정보 가져오기
+    fetch(`/api/reviews/${id}`)
+      .then(res => res.json())
+      .then(review => {
+        movieImg.src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
+        titleInput.value = review.title;
+        watchedDateInput.value = review.watchedDate;
+        contentInput.value = review.content;
+        selectedRating = review.rating || 0;
+        ratingBox.textContent = "🍊".repeat(selectedRating);
+      })
+      .catch(err => {
+        console.error(err);
+        document.querySelector("main").innerHTML = "<p>영화 정보를 찾을 수 없습니다.</p>";
+      });
+
+
+    // 별점 선택
+    ratingBox.addEventListener("click", () => {
+      selectedRating = prompt("별점을 1~5로 입력하세요") || selectedRating;
+      selectedRating = Math.min(Math.max(Number(selectedRating),1),5);
+      ratingBox.textContent = "🍊".repeat(selectedRating);
+    });
+
+    // 수정 완료 버튼 클릭 → PUT 요청
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const updatedMovie = {
+        title: titleInput.value,
+        watchedDate: watchedDateInput.value,
+        content: contentInput.value,
+        posterPath: movieImg.src,
+        rating: selectedRating
+      };
+
+      fetch(`/api/reviews/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedMovie)
+      })
+      .then(res => {
+        if(res.ok){
+          alert("수정 완료! 홈으로 이동합니다.");
+          window.location.href = "home.html";
+        } else {
+          alert("수정에 실패했습니다.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("서버 오류가 발생했습니다.");
+      });
+    });
+</script>
+</body>
+</html>
