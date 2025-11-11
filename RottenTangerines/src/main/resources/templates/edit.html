@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <title>영화 리뷰 수정</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" th:href="@{/style.css}" />
 </head>
 <body>
-<div id="navbar"></div>
+<div id="navbar" th:replace="/navbar"></div>
 
 <main class="container">
     <div class="left">
@@ -32,7 +32,7 @@
 <script>
 
 
-    fetch("navbar.html")
+   <!-- fetch("navbar.html")
       .then(res => res.text())
       .then(html => {
         document.getElementById("navbar").innerHTML = html;
@@ -112,7 +112,7 @@
         console.error(err);
         alert("서버 오류가 발생했습니다.");
       });
-    });
+    });-->
 </script>
 </body>
 </html>
