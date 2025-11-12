@@ -4,6 +4,37 @@
     <meta charset="UTF-8" />
     <title>영화 리뷰 등록</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            justify-content: space-around;
+            padding: 0 0.2em;
+            text-align: center;
+            width: 5em;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            filter: grayscale(100%) brightness(0.8);
+            transition: filter 0.2s ease;
+        }
+
+        .star-rating :checked ~ label {
+            filter: grayscale(0%) brightness(1) drop-shadow(0 0 8px rgba(255, 165, 0, 0.5));
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            filter: grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255, 200, 0, 0.8));
+        }
+    </style>
 </head>
 <body>
 <div id="navbar" th:replace="/navbar"></div>
@@ -20,18 +51,29 @@
     <div class="right">
         <div class="info-row">
             <input type="text" class="movie-title" id="titleInput" placeholder="영화 이름을 입력하세요" />
-            <div class="rating" id="ratingBox">
-                <span class="orange unselected">🍊</span>
-                <span class="orange unselected">🍊</span>
-                <span class="orange unselected">🍊</span>
-                <span class="orange unselected">🍊</span>
-                <span class="orange unselected">🍊</span>
+            <div class="star-rating" id="ratingBox">
+                <input type="radio" id="5-stars" name="rating" value="5" />
+                <label for="5-stars" class="star">🍊</label>
+
+                <input type="radio" id="4-stars" name="rating" value="4" />
+                <label for="4-stars" class="star">🍊</label>
+
+                <input type="radio" id="3-stars" name="rating" value="3" />
+                <label for="3-stars" class="star">🍊</label>
+
+                <input type="radio" id="2-stars" name="rating" value="2" />
+                <label for="2-stars" class="star">🍊</label>
+
+                <input type="radio" id="1-star" name="rating" value="1" />
+                <label for="1-star" class="star">🍊</label>
             </div>
         </div>
         <textarea class="review" id="contentInput" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
         <button class="btn" id="saveBtn">저장</button>
     </div>
 </main>
+</body>
+</html>
 
 <script>
     // navbar.html 불러오기
