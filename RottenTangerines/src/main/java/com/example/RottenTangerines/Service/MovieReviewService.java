@@ -53,8 +53,12 @@ public class MovieReviewService {
     @Transactional
     public MovieReview updateImageReview(int movieId, String title, Date watchedDate, String content, int rating, MultipartFile poster){
         MovieReview newReview = repo.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 값이 없습니다."));
-        fileImageService.deleteposter(newReview.getPosterPath());
-        String posterPath = (poster != null && !poster.isEmpty()) ? fileImageService.store(poster) : null;
+        String posterPath = newReview.getPosterPath();
+
+        if (poster != null && !poster.isEmpty()) {
+            fileImageService.deleteposter(posterPath);
+            posterPath = fileImageService.store(poster);
+        }
 
         //fileImageService.deleteposter(movieReview.getPosterPath());
             newReview.updateTitle(title);

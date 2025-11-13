@@ -95,7 +95,6 @@
 
 <script>
     // 수정완료 버튼 클릭 시
-    // 수정완료 버튼 클릭 시
     const $ = (selector) => document.querySelector(selector);
 
     $("#saveBtn").addEventListener("click", async () => {
@@ -114,10 +113,15 @@
         formData.append("content", $("#content").value);
         formData.append("rating", ratingElement.value);
 
-        const file = $("#posterPath").files[0];
+        const fileInput = $("#posterPath");
+        const file = fileInput ? fileInput.files[0] : null;
+        console.log("선택된 파일:", file);
+
         if (file) {
             formData.append("posterPath", file);
         }
+        // 파일 안 골랐으면 아예 posterPath를 formData에 안 넣기
+
 
         try {
             const res = await fetch(`/api/reviews/update/image/${id}`, {  // /api 추가!
@@ -138,19 +142,41 @@
             alert("수정 실패: " + e.message);
         }
     });
-    
+
     // 이미지 파일 선택 시 미리보기
-    $('#posterPath').addEventListener('change', function(e) {
+    $("#posterPath").addEventListener("change", function(e) {
         const file = e.target.files[0];
-        if (file) {
-            imageChanged = true;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $('#movieImg').src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            // 기존 포스터 이미지를 새 이미지로 교체
+            $("#movieImg").src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
     });
+/*
+    // 이미지 파일 선택 시 미리보기
+    $("#posterPath").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const photoBox = $("#photoBox");
+            // 배경 이미지로 설정
+            photoBox.style.backgroundImage = `url(${ev.target.result})`;
+            photoBox.style.backgroundSize = "cover";
+            photoBox.style.backgroundPosition = "center";
+
+            // 가운데 텍스트는 숨기기
+            const span = photoBox.querySelector("span");
+            if (span) {
+                span.style.display = "none";
+            }
+        };
+        reader.readAsDataURL(file);
+    });*/
 </script>
 </body>
 </html>
