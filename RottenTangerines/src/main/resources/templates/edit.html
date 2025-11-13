@@ -42,6 +42,36 @@
         .star-rating label:hover ~ label {
             filter: grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255, 200, 0, 0.8));
         }
+        .photo-box {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-box input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .photo-box span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #999;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .photo-box:hover span {
+            color: #ff8c00;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
