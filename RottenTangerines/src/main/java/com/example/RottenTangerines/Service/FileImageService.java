@@ -1,6 +1,5 @@
 package com.example.RottenTangerines.Service;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -26,8 +26,13 @@ public class FileImageService {
         if(mf == null || mf.isEmpty()) return null;
 
         try{
-            //운영체제에 맞는 경로 객체 생성
-            Path uploadPath = Paths.get(uploadDir);
+            // static 폴더 아래 uploads 경로 설정
+            Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
+
+            // 폴더가 없으면 생성
+            if(!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
             String originalName = mf.getOriginalFilename();
             String newName = UUID.randomUUID() + "-" + originalName;
@@ -35,7 +40,7 @@ public class FileImageService {
 
             mf.transferTo(target.toFile());
 
-            return "/uploads/" + newName;
+            return "/" + uploadDir + "/" + newName;
 
         } catch (Exception e){
             log.error("오류: " + e.getMessage());
@@ -48,14 +53,19 @@ public class FileImageService {
 
         if(posterPath == null || posterPath.isBlank()) return;
 
-        String fileName = posterPath.replace("/uploads/","");
+        // posterPath 예: /uploads/uuid-filename.jpg
+        String fileName = posterPath.replace("/" + uploadDir + "/","");
 
-        File file = new File(uploadDir + "/" + fileName);
+        // static 폴더 경로로 변경
+        File file = new File("src/main/resources/static/" + uploadDir + "/" + fileName);
 
         if(file.exists()){
             boolean result = file.delete();
+            if(result) {
+                log.info("파일 삭제 완료: {}", fileName);
+            } else {
+                log.error("파일 삭제 실패: {}", fileName);
+            }
         }
-
     }
-
 }
