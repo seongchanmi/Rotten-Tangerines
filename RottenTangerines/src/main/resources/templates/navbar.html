@@ -1,4 +1,4 @@
-<header class="navbar" th:fragment="nav">
+<!-- <header class="navbar" th:fragment="nav">
     <div class="nav-item" id="homeBtn">🏠 홈</div>
     <div class="nav-item" id="newBtn">➕ 등록</div>
 </header>
@@ -11,4 +11,9 @@
     function goRegister() {
       window.location.href = "new.html";
     }
-</script>
+</script> -->
+
+<header class="navbar" th:fragment="nav">
+    <a class="nav-item" th:href="@{/api}">🏠 홈</a>
+    <a class="nav-item" th:href="@{/api/new}">➕ 등록</a>
+</header>

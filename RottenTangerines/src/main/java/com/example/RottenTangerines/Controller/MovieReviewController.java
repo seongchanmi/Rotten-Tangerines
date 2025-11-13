@@ -60,11 +60,12 @@ public class MovieReviewController {
     }
 
     //개별 조회
+    /*
     @GetMapping("/reviews/{id}")
     public ResponseEntity<ReviewResponse> reviewFindById(@PathVariable int id){
         MovieReview movieReview = service.findByMovieId(id);
         return ResponseEntity.ok(ReviewResponse.fromEntity(movieReview));
-    }
+    }*/
 
     //삭제
     //일단 돌려 받을 값 없는 것을 상정하고 작성
@@ -83,12 +84,27 @@ public class MovieReviewController {
                                                             @RequestParam("content") String content,
                                                             @RequestParam("rating") Integer rating,
                                                             @RequestParam(value = "posterPath", required = false) MultipartFile poster
-    ){
+    ) {
         MovieReview updated = service.updateImageReview(id, title, watchedDate, content, rating, poster);
         return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
+    }
 
-    // 메인화면 호출
+
     @GetMapping
+    public String showHomePage() {
+        return "home";
+    }
+    @GetMapping("/new")
+    public String showNewPage() {
+        return "new";
+    }
+    @GetMapping("/reviews/{id}")
+    public String showupdatePage(@PathVariable int id, Model model) {
+        MovieReview review = service.findByMovieId(id);
+        model.addAttribute("review", review);
+        return "edit";
+    }
+    /*
     public String showLatestPost(Model model) {
         model.addAttribute("title", "인터스텔라");
         model.addAttribute("watchedDate", "2025-11-10");
@@ -105,6 +121,5 @@ public class MovieReviewController {
         model.addAttribute("review", review);
 
         return "edit";
-    }
-
+    }*/
 }
