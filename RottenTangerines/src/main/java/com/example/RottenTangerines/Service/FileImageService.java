@@ -24,26 +24,28 @@ public class FileImageService {
     public String store(MultipartFile mf) {
 
         if(mf == null || mf.isEmpty()) return null;
+        try {
+            // 1. Path 객체로 변환 (절대 경로 + normalize)
+            Path uploadPath = Paths.get(uploadDir)
+                    .toAbsolutePath()
+                    .normalize();
 
-        try{
-            // static 폴더 아래 uploads 경로 설정
-            Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
-
-            // 폴더가 없으면 생성
-            if(!Files.exists(uploadPath)) {
+            // 2. 디렉터리가 없으면 생성
+            if (Files.notExists(uploadPath)) {
                 Files.createDirectories(uploadPath);
+                log.info("업로드 디렉터리 생성: {}", uploadPath);
             }
 
-            String originalName = mf.getOriginalFilename();
-            String newName = UUID.randomUUID() + "-" + originalName;
-            Path target = uploadPath.resolve(newName);
-
-            mf.transferTo(target.toFile());
-
-            return "/" + uploadDir + "/" + newName;
-
-        } catch (Exception e){
-            log.error("오류: " + e.getMessage());
+            //운영체제에 맞는 경로 객체 생성
+            String originalName = mf.getOriginalFilename(); //원래 파일명
+            String newName = UUID.randomUUID() + "-" + originalName; //uuid-원래이름 76..what?
+            Path target = uploadPath.resolve(newName); // 경로 객체에 새로운 이름으로 연결
+            //.transferTo() 저장. 한 번 호출 뒤 재호출 안됨
+            mf.transferTo(target.toFile()); //원래 파일 경로는 path형태이나 로컬 저장을 위해 file 형태로 변환
+            //바로 접근 가능한 URL로 반환
+            return "/uploads/" + newName;
+        } catch (Exception e) {
+            log.error("오류 :" + e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "파일 저장 실패");
         }
     }
@@ -57,7 +59,9 @@ public class FileImageService {
         String fileName = posterPath.replace("/" + uploadDir + "/","");
 
         // static 폴더 경로로 변경
-        File file = new File("src/main/resources/static/" + uploadDir + "/" + fileName);
+        File file = new File(uploadDir + "/" + fileName);
+
+
 
         if(file.exists()){
             boolean result = file.delete();

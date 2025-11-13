@@ -106,12 +106,11 @@
 
 </body>
 </html>
-
 <script>
     const $ = (selector) => document.querySelector(selector);
 
+    // 저장 버튼 클릭
     $("#saveBtn").addEventListener("click", async () => {
-        // 평점 가져오기 (radio 버튼에서 선택된 값)
         const ratingElement = document.querySelector('input[name="rating"]:checked');
 
         if (!ratingElement) {
@@ -125,13 +124,16 @@
         formData.append("content", $("#content").value);
         formData.append("rating", ratingElement.value);
 
-        const file = $("#posterPath").files[0];
+        const fileInput = $("#posterPath");
+        const file = fileInput ? fileInput.files[0] : null;
+        console.log("선택된 파일:", file);
         if (file) {
             formData.append("posterPath", file);
         }
+        console.log("폼데이터:", [...formData.entries()]);
 
         try {
-            const res = await fetch("/api/reviews/image", {  // /api 추가!
+            const res = await fetch("/api/reviews/image", {
                 method: "POST",
                 body: formData
             });
@@ -141,30 +143,33 @@
             const data = await res.json();
             alert("리뷰가 저장되었습니다! 🍊");
 
-            // 홈 페이지로 이동 (컨트롤러의 @GetMapping)
             window.location.href = "/api";
-
         } catch (e) {
             console.error(e);
             alert("업로드 실패: " + e.message);
         }
     });
 
-    // 이미지 미리보기 (선택사항)
+    // 이미지 미리보기 (DOM 안 갈아엎는 버전)
     $("#posterPath").addEventListener("change", function(e) {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $("#photoBox").innerHTML = `
-                    <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" alt="미리보기" />
-                    <input type="file" id="posterPath" accept="image/*" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;" />
-                `;
-                // 이벤트 재등록
-                $("#posterPath").addEventListener("change", arguments.callee);
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const photoBox = $("#photoBox");
+            // 배경 이미지로 설정
+            photoBox.style.backgroundImage = `url(${ev.target.result})`;
+            photoBox.style.backgroundSize = "cover";
+            photoBox.style.backgroundPosition = "center";
+
+            // 가운데 텍스트는 숨기기
+            const span = photoBox.querySelector("span");
+            if (span) {
+                span.style.display = "none";
             }
-            reader.readAsDataURL(file);
-        }
+        };
+        reader.readAsDataURL(file);
     });
 </script>
 

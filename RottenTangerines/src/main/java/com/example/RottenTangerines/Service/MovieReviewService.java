@@ -85,7 +85,7 @@ public class MovieReviewService {
 
         // 파일 저장
         String posterPath = (poster != null && !poster.isEmpty()) ? fileImageService.store(poster) : null;
-
+        log.info("posterPath: {}", posterPath);
         MovieReview movieReview = MovieReview.builder()
                 .title(title)
                 .watchedDate(watchedDate)
