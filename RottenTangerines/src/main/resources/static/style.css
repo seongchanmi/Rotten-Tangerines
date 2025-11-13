@@ -277,12 +277,16 @@ input[type="file"] {
   cursor: pointer;
   transition: 0.3s;
   margin-top: 25px; /* 버튼 전체 공통 위 간격 */
+  text-decoration: none;
+  display: inline-block;
 }
 
 
 .btn:hover {
-  background-color: #ff9c33;
-  box-shadow: 0 0 8px rgba(255, 163, 72, 0.6);
+    text-decoration: none;
+    background-color: #ff9c33;
+    box-shadow: 0 0 8px rgba(255, 163, 72, 0.6);
+    display: inline-block;
 }
 
 .right {
