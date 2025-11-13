@@ -2,14 +2,17 @@ package com.example.RottenTangerines.DTO;
 
 import com.example.RottenTangerines.Entity.MovieReview;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class ReviewResponse {
 
     private Integer id;

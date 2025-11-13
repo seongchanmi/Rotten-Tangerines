@@ -9,15 +9,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@RestController
-//@RequestMapping("/api")
+//@RestController
+@Controller
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class MovieReviewController {
 
@@ -81,6 +85,24 @@ public class MovieReviewController {
         MovieReview updated = service.updateImageReview(id, title, watchedDate, content, rating, poster);
         return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
 
+    // 메인화면 호출
+    @GetMapping
+    public String showLatestPost(Model model) {
+        model.addAttribute("title", "인터스텔라");
+        model.addAttribute("watchedDate", "2025-11-10");
+        ReviewResponse review = new ReviewResponse(
+                1,
+                "인터스텔라",
+                Date.valueOf(LocalDate.of(2025, 11, 10)),
+                "시간의 상대성을 다룬 스토리가 인상 깊었습니다.",
+                5,
+                null,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        model.addAttribute("review", review);
+
+        return "detail";
     }
 
 }

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <title>영화 리뷰 상세보기</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" th:href="@{/style.css}" />
 </head>
 <body>
-<div id="navbar"></div>
+<div id="navbar" th:replace="/navbar"></div>
 
 <main class="detail-container">
 
@@ -21,7 +21,9 @@
     <!-- 오른쪽: 영화 정보 + 수정/삭제 버튼 -->
     <div class="detail-right">
         <div class="info-row">
-            <input type="text" class="detail-title"  readonly />
+            <span th:text="${review.title}">아직 제목 없음</span>
+            <span th:text="${review.watchedDate}">날짜 없음</span>
+            <!-- <input type="text" class="detail-title"  readonly /> -->
             <div class="detail-rating">🍊🍊🍊🍊🍊</div>
         </div>
         <textarea class="detail-review" readonly>
@@ -35,7 +37,7 @@
 </main>
 
 <script>
-    // URL에서 id 가져오기
+    <!--// URL에서 id 가져오기
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
@@ -90,7 +92,7 @@
             alert("서버 오류가 발생했습니다.");
           });
       }
-    });
+    });-->
 </script>
 </body>
 </html>
