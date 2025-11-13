@@ -47,6 +47,8 @@ public class MovieReviewController {
         return ResponseEntity.ok(saved);
     }
 
+
+
     //전체 조회
     @GetMapping("/home")
     public ResponseEntity<List<ReviewResponse>> getAll(){
@@ -120,5 +122,4 @@ public class MovieReviewController {
 
         return "edit";
     }*/
-
 }

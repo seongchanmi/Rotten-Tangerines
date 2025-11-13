@@ -13,61 +13,70 @@
 <main class="grid" id="movieGrid"></main>
 
 <script>
-<!--    //공통 nav파일을 자동으로 불러와서 붙임-->
-<!--    fetch("navbar.html")-->
-<!--      .then(res => res.text())-->
-<!--      .then(html => {-->
-<!--        document.getElementById("navbar").innerHTML = html;-->
-<!--        // HTML이 로드된 뒤에 이벤트 연결-->
-<!--        document.getElementById("homeBtn").addEventListener("click", () => {-->
-<!--          window.location.href = "home.html";-->
-<!--        });-->
-<!--        document.getElementById("newBtn").addEventListener("click", () => {-->
-<!--          window.location.href = "new.html";-->
-<!--        });-->
-<!--      });-->
+    const $ = (selector) => document.querySelector(selector);
+    const movieGrid = $('#movieGrid');
 
-// 영화 목록을 백엔드에서 가져와서 화면에 표시
-fetch("/api/home")  // 백엔드 GET /api/home 경로
-  .then(res => {
-    if (!res.ok) throw new Error("서버 응답 오류: " + res.status);
-    return res.json();
-  })
-  .then(reviewList => {
-    const grid = document.getElementById("movieGrid");
-    grid.innerHTML = ""; // 기존 카드 초기화
+    // 페이지 로드 시 영화 목록 가져오기
+    async function loadMovies() {
+        try {
+            const res = await fetch('/api/home');
+            if (!res.ok) throw new Error('영화 목록을 불러올 수 없습니다.');
 
-    reviewList.forEach(review => {
-      const card = document.createElement("div");
-      card.className = "card";
+            const movies = await res.json();
 
-      const title = review.title || "제목 없음";
-      const poster = review.posterPath || "/images/default.jpg";
-      const rating = Number(review.rating) || 0;
+            // 영화가 없을 때
+            if (movies.length === 0) {
+                movieGrid.innerHTML = '<p style="text-align: center; color: #999; margin-top: 50px;">아직 등록된 리뷰가 없습니다 🍊</p>';
+                return;
+            }
 
-      card.innerHTML = `
-        <img src="${poster}" alt="${title}" />
-        <div class="movie-name">${title}</div>
-        <div class="rating">${"🍊".repeat(rating)}</div>
-      `;
+            // 영화 카드 생성
+            movieGrid.innerHTML = movies.map(movie => createMovieCard(movie)).join('');
 
-      card.addEventListener("click", () => {
-        window.location.href = `detail.html?id=${review.id}`;
-      });
+            // 카드 클릭 이벤트 등록
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.dataset.id;
+                    window.location.href = `/api/reviews/${id}`;  // 상세 페이지로 이동
+                });
+            });
 
-      grid.appendChild(card);
-    });
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById("movieGrid").innerHTML =
-      "<p>등록된 리뷰가 없습니다.</p>";
-  });
+        } catch (e) {
+            console.error(e);
+            movieGrid.innerHTML = '<p style="text-align: center; color: red;">오류가 발생했습니다.</p>';
+        }
+    }
 
+    // 영화 카드 HTML 생성 함수
+    function createMovieCard(movie) {
+        // 귤 평점 생성
+        const oranges = '🍊'.repeat(movie.rating);
+        const emptyOranges = '🍊'.repeat(5 - movie.rating);
 
+        return `
+            <div class="movie-card" data-id="${movie.id}" style="cursor: pointer;">
+                <div class="movie-poster">
+                    <img src="${movie.posterPath || 'https://via.placeholder.com/220x260.png?text=포스터'}"
+                         alt="${movie.title}"
+                         style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-rating" style="filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.5));">
+                        <span style="filter: grayscale(0%);">${oranges}</span><span style="filter: grayscale(100%) brightness(0.8);">${emptyOranges}</span>
+                    </div>
+                    <p class="movie-date">${movie.watchedDate}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // 페이지 로드 시 실행
+    loadMovies();
 </script>
 </body>
 </html>
+
 
 
 
