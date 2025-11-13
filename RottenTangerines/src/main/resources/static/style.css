@@ -269,6 +269,7 @@ input[type="file"] {
 
 
 .btn {
+  font-family: "Gowun Batang", serif;
   background-color: #ffb84c;
   border: none;
   border-radius: 12px;
@@ -279,7 +280,13 @@ input[type="file"] {
   transition: 0.3s;
   margin-top: 25px; /* 버튼 전체 공통 위 간격 */
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex; */
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
 }
 
 
