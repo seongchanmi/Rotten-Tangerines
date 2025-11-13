@@ -150,6 +150,8 @@ input[type="file"] {
   transition: all 0.3s ease;
   padding: 8px 16px;
   border-radius: 10px;
+  text-decoration: none;
+
 }
 
 .nav-item:hover {

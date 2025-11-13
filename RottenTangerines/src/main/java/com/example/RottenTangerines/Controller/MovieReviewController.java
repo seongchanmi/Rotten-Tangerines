@@ -81,12 +81,21 @@ public class MovieReviewController {
                                                             @RequestParam("content") String content,
                                                             @RequestParam("rating") Integer rating,
                                                             @RequestParam(value = "posterPath", required = false) MultipartFile poster
-    ){
+    ) {
         MovieReview updated = service.updateImageReview(id, title, watchedDate, content, rating, poster);
         return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
+    }
 
     // 메인화면 호출
     @GetMapping
+    public String showHomePage() {
+        return "home";
+    }
+    @GetMapping("/new")
+    public String showNewPage() {
+        return "new";
+    }
+    /*
     public String showLatestPost(Model model) {
         model.addAttribute("title", "인터스텔라");
         model.addAttribute("watchedDate", "2025-11-10");
@@ -102,7 +111,7 @@ public class MovieReviewController {
         );
         model.addAttribute("review", review);
 
-        return "new";
-    }
+        return "edit";
+    }*/
 
 }
