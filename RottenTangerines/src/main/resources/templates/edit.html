@@ -68,7 +68,7 @@
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="title" th:value="${review.title}"/>
+            <input type="text" class="detail-title" id="title" th:value="${review.title}"/>
             <div class="star-rating space-x-4 mx-auto">
                 <input type="radio" id="5-stars" name="rating" value="5" th:checked="${review.rating == 5}"/>
                 <label for="5-stars" class="star pr-4">🍊</label>
@@ -86,7 +86,7 @@
                 <label for="1-star" class="star">🍊</label>
             </div>
         </div>
-        <textarea class="review" id="content" th:text="${review.content}"></textarea>
+        <textarea class="detail-review" id="content" th:text="${review.content}"></textarea>
         <div class="btn-group">
             <button class="btn" id="saveBtn">수정완료</button>
         </div>
@@ -95,50 +95,50 @@
 
 <script>
     // 수정완료 버튼 클릭 시
-    $("#saveBtn").addEventListener('click', async () => {
-        const id = $('#reviewId').value;
-        const title = $('#title').value.trim();
-        const watchedDate = $('#watchedDate').value;
-        const content = $('#content').value.trim();
-        const ratingElement = document.querySelector('input[name="rating"]:checked');
-        const file = $('#posterPath').files[0];
+    // 수정완료 버튼 클릭 시
+    const $ = (selector) => document.querySelector(selector);
 
-        // 유효성 검사
-        if (!title || !watchedDate || !content || !ratingElement) {
-            alert('모든 항목을 입력해주세요!');
+    $("#saveBtn").addEventListener("click", async () => {
+        // 평점 가져오기 (radio 버튼에서 선택된 값)
+        const ratingElement = document.querySelector('input[name="rating"]:checked');
+
+        if (!ratingElement) {
+            alert("평점을 선택해주세요! 🍊");
             return;
         }
+        const id = $("#reviewId").value;
 
-        // FormData 생성 (이미지 업로드 포함)
         const formData = new FormData();
-        formData.append('id', id);
-        formData.append('title', title);
-        formData.append('watchedDate', watchedDate);
-        formData.append('content', content);
-        formData.append('rating', ratingElement.value);
+        formData.append("title", $("#title").value);
+        formData.append("watchedDate", $("#watchedDate").value);
+        formData.append("content", $("#content").value);
+        formData.append("rating", ratingElement.value);
 
-        // 새 이미지가 선택된 경우에만 추가
+        const file = $("#posterPath").files[0];
         if (file) {
-            formData.append('posterPath', file);
+            formData.append("posterPath", file);
         }
 
         try {
-            const res = await fetch(`/api/reviews/update/${id}`, {
-                method: 'POST',
+            const res = await fetch(`/api/reviews/update/image/${id}`, {  // /api 추가!
+                method: "PUT",
                 body: formData
             });
 
             if (!res.ok) throw new Error(res.status);
 
-            alert('수정 완료! 🍊');
-            window.location.href = `/api/reviews/${id}`;  // 상세 페이지로 이동
+            const data = await res.json();
+            alert("수정이 완료되었습니다! 🍊");
+
+            // 수정 후 다시 디테일페이지로
+            window.location.href = `/api/detail/${id}`;
 
         } catch (e) {
-            alert('수정 실패: ' + e.message);
             console.error(e);
+            alert("수정 실패: " + e.message);
         }
     });
-
+    
     // 이미지 파일 선택 시 미리보기
     $('#posterPath').addEventListener('change', function(e) {
         const file = e.target.files[0];

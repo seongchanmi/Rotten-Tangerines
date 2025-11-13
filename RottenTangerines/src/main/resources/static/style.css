@@ -222,7 +222,8 @@ input[type="file"] {
 }
 
 .detail-title {
-  flex: 2;
+  flex: none;
+  width: 200px;
   border: 2px solid #ffd18b;
   border-radius: 10px;
   padding: 10px;
@@ -268,6 +269,7 @@ input[type="file"] {
 
 
 .btn {
+  font-family: "Gowun Batang", serif;
   background-color: #ffb84c;
   border: none;
   border-radius: 12px;
@@ -278,7 +280,13 @@ input[type="file"] {
   transition: 0.3s;
   margin-top: 25px; /* 버튼 전체 공통 위 간격 */
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex; */
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
 }
 
 
@@ -299,12 +307,13 @@ input[type="file"] {
 
 /* 버튼 위치 수정: 오른쪽 아래 */
 #saveBtn {
-  margin-top: 25px !important; /* 버튼 위쪽에 여유 공간 추가 */
+  margin-top: 10px; !important; /* 버튼 위쪽에 여유 공간 추가 */
   display: block;
-  align-self: flex-start; /* 혹시 flex 내부에 있을 때 밀착 방지 */
-  position: absolute;   /* 오른쪽 아래에 붙게 */
+  align-self: flex-end; /* 혹시 flex 내부에 있을 때 밀착 방지 */
+  position: static;    /* 오른쪽 아래에 붙게 */
   bottom: 0;
   right: 0;
   padding: 8px 16px;   /* 버튼 크기 작게 */
   font-size: 0.9rem;   /* 글자 크기 조절 */
+
 }

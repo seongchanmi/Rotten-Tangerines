@@ -8,7 +8,7 @@
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
-            font-size: 2.25rem;
+            font-size: 2.5rem;
             line-height: 2.5rem;
             justify-content: space-around;
             padding: 0 0.2em;
@@ -65,6 +65,7 @@
             color: #ff8c00;
             transform: scale(1.05);
         }
+
     </style>
 </head>
 <body>
@@ -81,13 +82,13 @@
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="title" placeholder="영화 이름을 입력하세요" />
+            <input type="text" class="detail-title" id="title" placeholder="영화 이름을 입력하세요" />
             <div class="star-rating" id="ratingBox">
                 <input type="radio" id="5-stars" name="rating" value="5" />
                 <label for="5-stars" class="star">🍊</label>
 
                 <input type="radio" id="4-stars" name="rating" value="4" />
-                <label for="4-stars" class="star">🍊</label>
+                <label for="4-stars" class="star" >🍊</label>
 
                 <input type="radio" id="3-stars" name="rating" value="3" />
                 <label for="3-stars" class="star">🍊</label>
@@ -99,7 +100,7 @@
                 <label for="1-star" class="star">🍊</label>
             </div>
         </div>
-        <textarea class="review" id="content" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
+        <textarea class="detail-review" id="content" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
         <button class="btn" id="saveBtn">저장</button>
     </div>
 </main>
