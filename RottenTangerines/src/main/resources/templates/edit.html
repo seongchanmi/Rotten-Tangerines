@@ -5,6 +5,7 @@
     <title>영화 리뷰 수정</title>
     <link rel="stylesheet" th:href="@{/style.css}" />
     <style>
+        /* 귤 평점 스타일은 그대로 유지 */
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
@@ -15,29 +16,15 @@
             text-align: center;
             width: 5em;
         }
-
-
-
-        .star-rating input {
-            display: none;
-        }
-
-
-
+        .star-rating input { display: none; }
         .star-rating label {
             cursor: pointer;
             filter: grayscale(100%) brightness(0.8);
             transition: filter 0.2s ease;
         }
-
-
-
         .star-rating :checked ~ label {
             filter: grayscale(0%) brightness(1) drop-shadow(0 0 8px rgba(255, 165, 0, 0.5));
         }
-
-
-
         .star-rating label:hover,
         .star-rating label:hover ~ label {
             filter: grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255, 200, 0, 0.8));
@@ -45,8 +32,14 @@
         .photo-box {
             position: relative;
             cursor: pointer;
+            width: 100%;
+            height: 100%;
         }
-
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .photo-box input[type="file"] {
             position: absolute;
             width: 100%;
@@ -56,363 +49,111 @@
             opacity: 0;
             cursor: pointer;
         }
-
-        .photo-box span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            color: #999;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .photo-box:hover span {
-            color: #ff8c00;
-            transform: scale(1.05);
-        }
     </style>
 </head>
 <body>
 <div id="navbar" th:replace="/navbar"></div>
 
-
+<!-- 리뷰 ID를 hidden input으로 저장 -->
+<input type="hidden" id="reviewId" th:value="${review.id}" />
 
 <main class="container">
     <div class="left">
         <div class="photo-box" id="photoBox">
-            <img id="movieImg" alt="영화 포스터" />
-            <input type="file" id="photoInput" accept="image/*" />
+            <img id="movieImg" th:src="${review.posterPath}" alt="영화 포스터" />
+            <input type="file" id="posterPath" accept="image/*" />
         </div>
-        <input type="date" class="date" id="watchedDateInput" th:value="${review.watchedDate}"/>
+        <input type="date" class="date" id="watchedDate" th:value="${review.watchedDate}"/>
     </div>
-
-
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="titleInput" th:value="${review.title}"/>
+            <input type="text" class="movie-title" id="title" th:value="${review.title}"/>
             <div class="star-rating space-x-4 mx-auto">
                 <input type="radio" id="5-stars" name="rating" value="5" th:checked="${review.rating == 5}"/>
                 <label for="5-stars" class="star pr-4">🍊</label>
 
-
-
                 <input type="radio" id="4-stars" name="rating" value="4" th:checked="${review.rating == 4}"/>
                 <label for="4-stars" class="star">🍊</label>
-
-
 
                 <input type="radio" id="3-stars" name="rating" value="3" th:checked="${review.rating == 3}"/>
                 <label for="3-stars" class="star">🍊</label>
 
-
-
                 <input type="radio" id="2-stars" name="rating" value="2" th:checked="${review.rating == 2}"/>
                 <label for="2-stars" class="star">🍊</label>
-
-
 
                 <input type="radio" id="1-star" name="rating" value="1" th:checked="${review.rating == 1}"/>
                 <label for="1-star" class="star">🍊</label>
             </div>
         </div>
-        <input class="review" id="contentInput" th:value="${review.content}">
+        <textarea class="review" id="content" th:text="${review.content}"></textarea>
         <div class="btn-group">
             <button class="btn" id="saveBtn">수정완료</button>
         </div>
     </div>
 </main>
-
-
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+    const $ = (selector) => document.querySelector(selector);
+    let imageChanged = false; // 이미지가 변경되었는지 추적
 
+    // 수정완료 버튼 클릭 시
+    $("#saveBtn").addEventListener('click', async () => {
+        const id = $('#reviewId').value;
+        const title = $('#title').value.trim();
+        const watchedDate = $('#watchedDate').value;
+        const content = $('#content').value.trim();
+        const ratingElement = document.querySelector('input[name="rating"]:checked');
+        const file = $('#posterPath').files[0];
 
-
-    const movieImg = document.getElementById("movieImg");
-    const titleInput = document.getElementById("titleInput");
-    const watchedDateInput = document.getElementById("watchedDateInput");
-    const contentInput = document.getElementById("contentInput");
-    const photoInput = document.getElementById("photoInput");
-
-
-
-    let selectedRating = 0;
-
-
-
-    // 백엔드에서 영화 리뷰 정보 가져오기
-    fetch(`/api/reviews/${id}`)
-      .then(res => res.json())
-      .then(review => {
-        movieImg.src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
-        titleInput.value = review.title;
-        watchedDateInput.value = review.watchedDate;
-        contentInput.value = review.content;
-        selectedRating = review.rating || 0;
-
-        // 별점 체크
-        if(selectedRating > 0) {
-          document.getElementById(`${selectedRating}-star${selectedRating > 1 ? 's' : ''}`).checked = true;
+        // 유효성 검사
+        if (!title || !watchedDate || !content || !ratingElement) {
+            alert('모든 항목을 입력해주세요!');
+            return;
         }
-      })
-      .catch(err => {
-        console.error(err);
-        document.querySelector("main").innerHTML = "<p>영화 정보를 찾을 수 없습니다.</p>";
-      });
 
+        // FormData 생성 (이미지 업로드 포함)
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('title', title);
+        formData.append('watchedDate', watchedDate);
+        formData.append('content', content);
+        formData.append('rating', ratingElement.value);
 
+        // 새 이미지가 선택된 경우에만 추가
+        if (file) {
+            formData.append('posterPath', file);
+        }
 
-    // 별점 선택 감지
-    document.querySelectorAll('input[name="rating"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        selectedRating = parseInt(e.target.value);
-      });
+        try {
+            const res = await fetch(`/api/reviews/update/${id}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!res.ok) throw new Error(res.status);
+
+            alert('수정 완료! 🍊');
+            window.location.href = `/api/reviews/${id}`;  // 상세 페이지로 이동
+
+        } catch (e) {
+            alert('수정 실패: ' + e.message);
+            console.error(e);
+        }
     });
 
-
-
-    // 수정 완료 버튼 클릭 → PUT 요청
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const updatedMovie = {
-        title: titleInput.value,
-        watchedDate: watchedDateInput.value,
-        content: contentInput.value,
-        posterPath: movieImg.src,
-        rating: selectedRating
-      };
-
-
-
-      fetch(`/api/reviews/update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedMovie)
-      })
-      .then(res => {
-        if(res.ok){
-          alert("수정 완료! 홈으로 이동합니다.");
-          window.location.href = "home.html";
-        } else {
-          alert("수정에 실패했습니다.");
+    // 이미지 파일 선택 시 미리보기
+    $('#posterPath').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            imageChanged = true;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#movieImg').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("서버 오류가 발생했습니다.");
-      });
     });
-</script>
-</body>
-</html>
-```
-
-
-
-주요 수정사항:
-
-
-
-`<style>` 태그: React 코드를 제거하고 순수 CSS로 변경 - 귤이 기본적으로 회색조로 보이다가 선택/호버 시 색상이 나타나도록 `filter` 속성 사용
-`v-model` 제거: Vue.js 문법이었던 `v-model`을 제거하고 Thymeleaf의 `th:checked` 사용
-JavaScript: 별점 선택을 감지하는 이벤트 리스너 추가
-주석 처리된 코드: 불필요한 주석 제거하고 실제 동작하는 코드만 남김
-
-
-이제 귤 레이팅이 제대로 동작할 거예요! 🍊
-
-음 우리는 자바스크립트 없이 해야돼 왜냐하면 타임리프로 연결해야되기 때문이야. 그래서 스크립트부분에는 주석을 쳤어
-아! 이해했어요. JavaScript 없이 순수 CSS와 Thymeleaf만으로 작동해야 하는군요. 그럼 CSS만으로 귤 레이팅이 작동하도록 수정할게요!
-
-
-
-```html
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title>영화 리뷰 수정</title>
-    <link rel="stylesheet" th:href="@{/style.css}" />
-    <style>
-        .star-rating {
-            display: flex;
-            flex-direction: row-reverse;
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            justify-content: space-around;
-            padding: 0 0.2em;
-            text-align: center;
-            width: 5em;
-        }
-
-
-
-        .star-rating input {
-            display: none;
-        }
-
-
-
-        .star-rating label {
-            cursor: pointer;
-            filter: grayscale(100%) brightness(0.8);
-            transition: filter 0.2s ease;
-        }
-
-
-
-        .star-rating :checked ~ label {
-            filter: grayscale(0%) brightness(1) drop-shadow(0 0 8px rgba(255, 165, 0, 0.5));
-        }
-
-
-
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            filter: grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255, 200, 0, 0.8));
-        }
-</style>
-</head>
-<body>
-<div id="navbar" th:replace="/navbar"></div>
-
-
-
-<main class="container">
-    <div class="left">
-        <div class="photo-box" id="photoBox">
-            <img id="movieImg" alt="영화 포스터" />
-            <input type="file" id="photoInput" accept="image/*" />
-        </div>
-        <input type="date" class="date" id="watchedDateInput" th:value="${review.watchedDate}"/>
-    </div>
-
-
-
-    <div class="right">
-        <div class="info-row">
-            <input type="text" class="movie-title" id="titleInput" th:value="${review.title}"/>
-            <div class="star-rating space-x-4 mx-auto">
-                <input type="radio" id="5-stars" name="rating" value="5" th:checked="${review.rating == 5}"/>
-                <label for="5-stars" class="star pr-4">🍊</label>
-
-
-
-                <input type="radio" id="4-stars" name="rating" value="4" th:checked="${review.rating == 4}"/>
-                <label for="4-stars" class="star">🍊</label>
-
-
-
-                <input type="radio" id="3-stars" name="rating" value="3" th:checked="${review.rating == 3}"/>
-                <label for="3-stars" class="star">🍊</label>
-
-
-
-                <input type="radio" id="2-stars" name="rating" value="2" th:checked="${review.rating == 2}"/>
-                <label for="2-stars" class="star">🍊</label>
-
-
-
-                <input type="radio" id="1-star" name="rating" value="1" th:checked="${review.rating == 1}"/>
-                <label for="1-star" class="star">🍊</label>
-            </div>
-
-
-
-        </div>
-        <input class="review" id="contentInput" th:value="${review.content}">
-        <div class="btn-group">
-            <button class="btn" id="saveBtn">수정완료</button>
-        </div>
-    </div>
-</main>
-
-
-<!-- fetch("navbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("navbar").innerHTML = html;
-
-        // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
-        document.getElementById("homeBtn").addEventListener("click", () => {
-          window.location.href = "home.html";
-        });
-        document.getElementById("newBtn").addEventListener("click", () => {
-          window.location.href = "new.html";
-        });
-      })
-      .catch(err => console.error("네비게이션 로드 오류:", err));
-
-
-         // URL에서 id 가져오기
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-
-    const movieImg = document.getElementById("movieImg");
-    const titleInput = document.getElementById("titleInput");
-    const watchedDateInput = document.getElementById("watchedDateInput");
-    const contentInput = document.getElementById("contentInput");
-    const ratingBox = document.getElementById("ratingBox");
-    const photoInput = document.getElementById("photoInput");
-
-    let selectedRating = 0;
-
-    // 백엔드에서 영화 리뷰 정보 가져오기
-    fetch(`/api/reviews/${id}`)
-      .then(res => res.json())
-      .then(review => {
-        movieImg.src = review.posterPath || "https://via.placeholder.com/220x260.png?text=포스터";
-        titleInput.value = review.title;
-        watchedDateInput.value = review.watchedDate;
-        contentInput.value = review.content;
-        selectedRating = review.rating || 0;
-        ratingBox.textContent = "🍊".repeat(selectedRating);
-      })
-      .catch(err => {
-        console.error(err);
-        document.querySelector("main").innerHTML = "<p>영화 정보를 찾을 수 없습니다.</p>";
-      });
-
-
-    // 별점 선택
-    ratingBox.addEventListener("click", () => {
-      selectedRating = prompt("별점을 1~5로 입력하세요") || selectedRating;
-      selectedRating = Math.min(Math.max(Number(selectedRating),1),5);
-      ratingBox.textContent = "🍊".repeat(selectedRating);
-    });
-
-    // 수정 완료 버튼 클릭 → PUT 요청
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const updatedMovie = {
-        title: titleInput.value,
-        watchedDate: watchedDateInput.value,
-        content: contentInput.value,
-        posterPath: movieImg.src,
-        rating: selectedRating
-      };
-
-      fetch(`/api/reviews/update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedMovie)
-      })
-      .then(res => {
-        if(res.ok){
-          alert("수정 완료! 홈으로 이동합니다.");
-          window.location.href = "home.html";
-        } else {
-          alert("수정에 실패했습니다.");
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("서버 오류가 발생했습니다.");
-      });
-    }); -->
 </script>
 </body>
 </html>

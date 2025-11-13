@@ -34,7 +34,8 @@
         .star-rating label:hover ~ label {
             filter: grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255, 200, 0, 0.8));
         }
-         .photo-box {
+
+        .photo-box {
             position: relative;
             cursor: pointer;
         }
@@ -72,15 +73,15 @@
 <main class="container">
     <div class="left">
         <div class="photo-box" id="photoBox">
-            <span>사진 업로드</span>
-            <input type="file" id="photoInput" accept="image/*" />
+            <span>📷<br>사진 업로드</span>
+            <input type="file" id="posterPath" accept="image/*" />
         </div>
-        <input type="date" class="date" id="watchedDateInput" />
+        <input type="date" class="date" id="watchedDate" />
     </div>
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="titleInput" placeholder="영화 이름을 입력하세요" />
+            <input type="text" class="movie-title" id="title" placeholder="영화 이름을 입력하세요" />
             <div class="star-rating" id="ratingBox">
                 <input type="radio" id="5-stars" name="rating" value="5" />
                 <label for="5-stars" class="star">🍊</label>
@@ -98,78 +99,74 @@
                 <label for="1-star" class="star">🍊</label>
             </div>
         </div>
-        <textarea class="review" id="contentInput" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
+        <textarea class="review" id="content" placeholder="감귤밭의 향기처럼 따뜻한 리뷰를 남겨보세요 🍊"></textarea>
         <button class="btn" id="saveBtn">저장</button>
     </div>
 </main>
+
 </body>
 </html>
 
 <script>
-    // navbar.html 불러오기
-    <!--fetch("navbar.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("navbar").innerHTML = html;
+    const $ = (selector) => document.querySelector(selector);
 
-       // navbar.html이 로드된 뒤에 버튼 클릭 이벤트 연결
-        document.getElementById("homeBtn").addEventListener("click", () => {
-          window.location.href = "home.html";
-        });
-        document.getElementById("newBtn").addEventListener("click", () => {
-          window.location.href = "new.html";
-        });
-      })
-      .catch(err => console.error("네비게이션 로드 오류:", err));
+    $("#saveBtn").addEventListener("click", async () => {
+        // 평점 가져오기 (radio 버튼에서 선택된 값)
+        const ratingElement = document.querySelector('input[name="rating"]:checked');
 
-    // 별점 선택 기능
-    const ratingBox = document.getElementById("ratingBox");
-    const oranges = ratingBox.querySelectorAll(".orange");
-    let selectedRating = 0;
-    oranges.forEach((o, i) =>
-      o.addEventListener("click", () => {
-        selectedRating = i + 1;
-        oranges.forEach((x, j) =>
-          x.classList.toggle("unselected", j >= selectedRating)
-        );
-      })
-    );
-
-      // 저장 버튼 클릭 시 서버 POST
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const titleInput = document.getElementById("titleInput");
-      const watchedDateInput = document.getElementById("watchedDateInput");
-      const contentInput = document.getElementById("contentInput");
-
-      if(!titleInput.value || !watchedDateInput.value){
-        alert("영화 제목과 관람일은 필수입니다!");
-        return;
-      }
-
-      fetch('/api/reviews/new', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: titleInput.value,
-          watchedDate: watchedDateInput.value,
-          content: contentInput.value,
-          posterPath: uploadedImageSrc,
-          rating: selectedRating
-        })
-      })
-      .then(res => {
-        if(res.ok){
-          alert("등록 완료! 홈으로 이동합니다.");
-          window.location.href = "home.html";
-        } else {
-          alert("등록 실패");
+        if (!ratingElement) {
+            alert("평점을 선택해주세요! 🍊");
+            return;
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("서버 오류 발생");
-      });
-    });-->
+
+        const formData = new FormData();
+        formData.append("title", $("#title").value);
+        formData.append("watchedDate", $("#watchedDate").value);
+        formData.append("content", $("#content").value);
+        formData.append("rating", ratingElement.value);
+
+        const file = $("#posterPath").files[0];
+        if (file) {
+            formData.append("posterPath", file);
+        }
+
+        try {
+            const res = await fetch("/api/reviews/image", {  // /api 추가!
+                method: "POST",
+                body: formData
+            });
+
+            if (!res.ok) throw new Error(res.status);
+
+            const data = await res.json();
+            alert("리뷰가 저장되었습니다! 🍊");
+
+            // 홈 페이지로 이동 (컨트롤러의 @GetMapping)
+            window.location.href = "/api";
+
+        } catch (e) {
+            console.error(e);
+            alert("업로드 실패: " + e.message);
+        }
+    });
+
+    // 이미지 미리보기 (선택사항)
+    $("#posterPath").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $("#photoBox").innerHTML = `
+                    <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" alt="미리보기" />
+                    <input type="file" id="posterPath" accept="image/*" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;" />
+                `;
+                // 이벤트 재등록
+                $("#posterPath").addEventListener("change", arguments.callee);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
+
 </body>
 </html>
