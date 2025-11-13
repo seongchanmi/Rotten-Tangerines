@@ -68,7 +68,7 @@
 
     <div class="right">
         <div class="info-row">
-            <input type="text" class="movie-title" id="title" th:value="${review.title}"/>
+            <input type="text" class="detail-title" id="title" th:value="${review.title}"/>
             <div class="star-rating space-x-4 mx-auto">
                 <input type="radio" id="5-stars" name="rating" value="5" th:checked="${review.rating == 5}"/>
                 <label for="5-stars" class="star pr-4">🍊</label>
@@ -86,7 +86,7 @@
                 <label for="1-star" class="star">🍊</label>
             </div>
         </div>
-        <textarea class="review" id="content" th:text="${review.content}"></textarea>
+        <textarea class="detail-review" id="content" th:text="${review.content}"></textarea>
         <div class="btn-group">
             <button class="btn" id="saveBtn">수정완료</button>
         </div>
