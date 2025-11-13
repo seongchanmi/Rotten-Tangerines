@@ -98,6 +98,12 @@ public class MovieReviewController {
     public String showNewPage() {
         return "new";
     }
+    @GetMapping("/detail/{id}")
+    public String showDetailPage(@PathVariable int id, Model model) {
+        MovieReview review = service.findByMovieId(id);
+        model.addAttribute("review", review);
+        return "detail";
+    }
     @GetMapping("/reviews/{id}")
     public String showupdatePage(@PathVariable int id, Model model) {
         MovieReview review = service.findByMovieId(id);
