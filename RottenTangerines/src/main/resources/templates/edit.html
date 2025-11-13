@@ -142,7 +142,20 @@
             alert("수정 실패: " + e.message);
         }
     });
-    
+
+    // 이미지 파일 선택 시 미리보기
+    $("#posterPath").addEventListener("change", function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            // 기존 포스터 이미지를 새 이미지로 교체
+            $("#movieImg").src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+/*
     // 이미지 파일 선택 시 미리보기
     $("#posterPath").addEventListener("change", function(e) {
         const file = e.target.files[0];
@@ -163,7 +176,7 @@
             }
         };
         reader.readAsDataURL(file);
-    });
+    });*/
 </script>
 </body>
 </html>
