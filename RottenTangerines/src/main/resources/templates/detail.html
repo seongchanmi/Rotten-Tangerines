@@ -12,7 +12,8 @@
 
     <div class="detail-left">
         <div class="detail-photo-box">
-            <img src="https://via.placeholder.com/220x260.png?text=포스터" alt="영화 포스터" />
+            <img alt="영화 포스터"
+                 th:src="${review.posterPath != null} ? ${review.posterPath} : 'https://via.placeholder.com/220x260.png?text=포스터'" />
         </div>
         <p class="detail-date" th:text="${review.watchedDate}"></p>
     </div>
