@@ -102,7 +102,7 @@ public class MovieReviewController {
         );
         model.addAttribute("review", review);
 
-        return "detail";
+        return "new";
     }
 
 }
