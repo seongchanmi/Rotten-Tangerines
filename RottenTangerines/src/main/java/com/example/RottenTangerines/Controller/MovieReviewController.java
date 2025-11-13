@@ -104,7 +104,7 @@ public class MovieReviewController {
         model.addAttribute("review", review);
         return "detail";
     }
-    @GetMapping("/reviews/{id}")
+    @GetMapping("/edit/{id}")
     public String showupdatePage(@PathVariable int id, Model model) {
         MovieReview review = service.findByMovieId(id);
         model.addAttribute("review", review);

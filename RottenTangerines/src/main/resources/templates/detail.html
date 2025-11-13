@@ -6,70 +6,57 @@
     <link rel="stylesheet" th:href="@{/style.css}" />
 </head>
 <body>
-<div id="navbar" th:replace="/navbar"></div>
+<div id="navbar" th:replace="~{/navbar}"></div>
 
 <main class="detail-container">
 
-    <!-- 왼쪽: 포스터 + 관람일 -->
     <div class="detail-left">
         <div class="detail-photo-box">
             <img src="https://via.placeholder.com/220x260.png?text=포스터" alt="영화 포스터" />
         </div>
-        <p class="detail-date" th:text="${review.watchedDate}">></p>
-
+        <p class="detail-date" th:text="${review.watchedDate}"></p>
     </div>
 
-    <!-- 오른쪽: 영화 정보 + 수정/삭제 버튼 -->
     <div class="detail-right">
         <div class="info-row">
-            <div type="text" class="detail-title" th:text="${review.title}">아직 제목 없음</div>
+            <div class="detail-title" th:text="${review.title}">아직 제목 없음</div>
             <div class="detail-rating">🍊🍊🍊🍊🍊</div>
         </div>
-        <textarea class="detail-review" th:text="${review.content}">아직 내용 없음>
-        </textarea>
+
+        <div class="detail-review" th:text="${review.content}"></div>
 
         <div class="btn-group">
-            <button class="btn" id="btn-save">수정</button>
-            <button class="btn" >삭제</button>
+            <a class="btn" th:href="@{/api/edit/{id}(id=${review.id})}">수정</a>
+            <button class="btn" id="btn-delete">삭제</button>
         </div>
     </div>
 </main>
 
-<script>
-    $("#btn-save").addEventListener("click", async () => {
-  const formData = new FormData();
-  formData.append("title", $("#title").value);
-  formData.append("watchedDate", $("#watchedDate").value);
-  formData.append("content", $("#content").value);
-  formData.append("rating", $("#rating").value);
-
-  const file = $("#posterPath").files[0];
-  if (file) {
-    formData.append("posterPath", file);
-  }
-
-  try {
-    const res = await fetch("/reviews/image", {
-      method: "POST",
-      body: formData
-    });
-
-    if (!res.ok) throw new Error(res.status);
-
-    const data = await res.json();
-
-    // 🔥 저장 성공했으니까 페이지 이동!
-    // 상세 페이지 id가 있다면:
-    window.location.href = `/detail.html?id=${data.id}`;
-
-    // 또는 리스트 페이지로 이동하고 싶으면:
-    // window.location.href = "/index.html";
-
-  } catch (e) {
-    console.error(e);
-    alert("업로드 실패: " + e.message);
-  }
-});
+<!-- review.id 를 JS에서 쓰기 위해 타임리프로 변수 전달 -->
+<script th:inline="javascript">
+    const reviewId = [[${review.id}]];
 </script>
+
+<script>
+    document.getElementById("btn-delete").addEventListener("click", async () => {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            const res = await fetch(`/api/delete/${reviewId}`, {
+                method: "DELETE"
+            });
+
+            if (!res.ok) throw new Error(res.status);
+
+            alert("리뷰가 삭제되었습니다!");
+            window.location.href = "/api";
+
+        } catch (e) {
+            console.error(e);
+            alert("삭제 실패: " + e.message);
+        }
+    });
+</script>
+
 </body>
 </html>
