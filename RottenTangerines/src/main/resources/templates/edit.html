@@ -85,7 +85,7 @@
             <img id="movieImg" alt="영화 포스터" />
             <input type="file" id="photoInput" accept="image/*" />
         </div>
-        <input type="date" class="date" id="watchedDateInput" th:value="${review.watchedDate}"/>
+        <input type="date" class="date" id="watchedDate" th:value="${review.watchedDate}"/>
     </div>
 
 
@@ -135,7 +135,7 @@
 
     const movieImg = document.getElementById("movieImg");
     const titleInput = document.getElementById("titleInput");
-    const watchedDateInput = document.getElementById("watchedDateInput");
+    const watchedDateInput = document.getElementById("#watchedDate");
     const contentInput = document.getElementById("contentInput");
     const photoInput = document.getElementById("photoInput");
 
@@ -185,6 +185,13 @@
         posterPath: movieImg.src,
         rating: selectedRating
       };
+      /*
+      const formData = new FormData();
+  formData.append("title", $("#title").value);
+  formData.append("watchedDate", $("#watchedDate").value);
+  formData.append("content", $("#content").value);
+  formData.append("rating", $("#rating").value);
+       */
 
 
 

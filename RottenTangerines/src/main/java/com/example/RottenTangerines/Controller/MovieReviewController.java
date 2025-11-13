@@ -58,11 +58,12 @@ public class MovieReviewController {
     }
 
     //개별 조회
+    /*
     @GetMapping("/reviews/{id}")
     public ResponseEntity<ReviewResponse> reviewFindById(@PathVariable int id){
         MovieReview movieReview = service.findByMovieId(id);
         return ResponseEntity.ok(ReviewResponse.fromEntity(movieReview));
-    }
+    }*/
 
     //삭제
     //일단 돌려 받을 값 없는 것을 상정하고 작성
@@ -86,7 +87,7 @@ public class MovieReviewController {
         return ResponseEntity.ok(ReviewResponse.fromEntity(updated));
     }
 
-    // 메인화면 호출
+
     @GetMapping
     public String showHomePage() {
         return "home";
@@ -94,6 +95,12 @@ public class MovieReviewController {
     @GetMapping("/new")
     public String showNewPage() {
         return "new";
+    }
+    @GetMapping("/reviews/{id}")
+    public String showupdatePage(@PathVariable int id, Model model) {
+        MovieReview review = service.findByMovieId(id);
+        model.addAttribute("review", review);
+        return "edit";
     }
     /*
     public String showLatestPost(Model model) {
