@@ -20,7 +20,9 @@
     <div class="detail-right">
         <div class="info-row">
             <div class="detail-title" th:text="${review.title}">아직 제목 없음</div>
-            <div class="detail-rating">🍊🍊🍊🍊🍊</div>
+            <div class="detail-rating">
+                <span th:each="i : ${#numbers.sequence(1, review.rating)}">🍊</span>
+            </div>
         </div>
 
         <div class="detail-review" th:text="${review.content}"></div>
