@@ -4,7 +4,7 @@
     <img width="1888" height="864" alt="image" src="https://github.com/user-attachments/assets/646299f8-ff19-4bca-ba55-70aa9b615f1e" />
     
 - 등록
-    <img width="1888" height="864" alt="image" src="https://github.com/user-attachments/assets/797b907f-f5f7-4112-9149-e0bcde22e026" />
+  <img width="1674" height="765" alt="image" src="https://github.com/user-attachments/assets/60145962-7ac9-478e-8095-a4c667704f83" />
     
 - 개별 조회
   <img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/41bbbeb5-22db-4f93-8895-894e099485a5" />
