@@ -4,8 +4,13 @@
     <img width="1888" height="864" alt="image" src="https://github.com/user-attachments/assets/646299f8-ff19-4bca-ba55-70aa9b615f1e" />
     
 - 등록
+  <img width="1918" height="869" alt="image" src="https://github.com/user-attachments/assets/fe3d780e-8fd6-41ab-aad2-4d8a4d647506" />
+
   <img width="1674" height="765" alt="image" src="https://github.com/user-attachments/assets/60145962-7ac9-478e-8095-a4c667704f83" />
-    
+
+- 수정
+  <img width="1881" height="866" alt="image" src="https://github.com/user-attachments/assets/4e9957da-1f69-47a8-b0c5-e6a01c7d3895" />
+
 - 개별 조회
   <img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/41bbbeb5-22db-4f93-8895-894e099485a5" />
 
