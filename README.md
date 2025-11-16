@@ -69,20 +69,28 @@
 &nbsp;
 
 - 전체 조회
-    <img width="1888" height="864" alt="image" src="https://github.com/user-attachments/assets/646299f8-ff19-4bca-ba55-70aa9b615f1e" />
-    
+<img width="1920" height="1080" alt="KakaoTalk_20251116_231441435" src="https://github.com/user-attachments/assets/1f66dd1a-fed4-438c-ae10-8dde675f2a8c" />
+
+
 &nbsp;
 - 등록
-  <img width="1918" height="869" alt="image" src="https://github.com/user-attachments/assets/fe3d780e-8fd6-41ab-aad2-4d8a4d647506" />
-&nbsp;
-  <img width="1674" height="765" alt="image" src="https://github.com/user-attachments/assets/60145962-7ac9-478e-8095-a4c667704f83" />
-&nbsp;
+<img width="1920" height="1080" alt="KakaoTalk_20251116_232021080" src="https://github.com/user-attachments/assets/e3c3da80-982a-4b0b-93fc-c0e6123aaa57" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/14ba2f43-ce04-456a-b2eb-77754a89154b" />
 
-- 수정
-  <img width="1881" height="866" alt="image" src="https://github.com/user-attachments/assets/4e9957da-1f69-47a8-b0c5-e6a01c7d3895" />
-&nbsp;
 
+&nbsp;
 - 개별 조회
-  <img width="1919" height="855" alt="image" src="https://github.com/user-attachments/assets/41bbbeb5-22db-4f93-8895-894e099485a5" />
+<img width="1920" height="1080" alt="KakaoTalk_20251116_231522900" src="https://github.com/user-attachments/assets/4d33972c-a628-4aa5-a07a-18ed750f1d02" />
+
+
+&nbsp;
+- 수정
+<img width="1920" height="1080" alt="KakaoTalk_20251116_231606708" src="https://github.com/user-attachments/assets/5a35034f-0241-48c1-b147-2633c41d9084" />
+<img width="1920" height="1080" alt="KakaoTalk_20251116_231620470" src="https://github.com/user-attachments/assets/89653d26-a948-4260-b6dc-c8c3dd7be5a9" />
+
+
+&nbsp;
+- 삭제
+<img width="1920" height="1080" alt="KakaoTalk_20251116_232726073" src="https://github.com/user-attachments/assets/7f0d9eb6-a312-4b50-ac20-e3f43dbc054e" />
 
     
